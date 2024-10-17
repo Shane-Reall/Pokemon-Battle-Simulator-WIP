@@ -1,9 +1,33 @@
 import java.util.Scanner;
+import java.util.Random;
 
-enum weatherType {
+enum weatherType { //All weather types that affect damage
     none,
     sun,
     rain,
+    DL,
+    PS
+}
+
+enum pkmnType { //All pokemon types
+    Normal,
+    Fighting,
+    Flying,
+    Poison,
+    Ground,
+    Rock,
+    Bug,
+    Ghost,
+    Steel,
+    Fire,
+    Water,
+    Grass,
+    Electric,
+    Psychic,
+    Ice,
+    Dragon,
+    Dark,
+    Fairy
 }
 
 public class Main {
@@ -17,19 +41,18 @@ public class Main {
         int totalDamageMin = 0;
         int totalDamageMax = 0;
 
-        //Booleans
+        //Variable Checkers
         boolean multBattle = false;
+        boolean spreadMove = false;
         boolean pbSecond = false;
         weatherType currentWeather = weatherType.none;
         boolean glaiveUsed = false;
-        boolean multBattle = false;
-        boolean multBattle = false;
-        boolean multBattle = false;
-        boolean multBattle = false;
-        boolean multBattle = false;
-        boolean multBattle = false;
-        boolean multBattle = false;
-        boolean multBattle = false;
+        int critChance = 0; //Ranges from 0 to 4 (If > 4 it will be the same as if it was four)
+        boolean burned = false;
+        boolean[] otherChecks = new boolean[]{false};
+        pkmnType moveType = pkmnType.Normal;
+        boolean shieldUp = false;
+        boolean tShieldUp = false;
 
         //Multiplier Variable
         double targets = 1;
@@ -49,6 +72,7 @@ public class Main {
         double totalMultMax = 0;
 
         Scanner input = new Scanner(System.in);
+        Random random = new Random();
 
         //Damage Variable Assignment
         System.out.print("Your Level: ");
@@ -67,8 +91,45 @@ public class Main {
         totalDamage = (((((2*level)/5)+2) * power * (attack/defense))/50)+2;
 
         //Individual Multiplier Checks
-        if () {
+        if (multBattle && spreadMove) {
+            targets = 0.75;
+        }
 
+        if (pbSecond) {
+            pb = 0.25;
+        }
+
+        switch (currentWeather) {
+            case rain:
+                if (moveType == pkmnType.Water) {
+                    type = 1.5;
+                } else if (moveType == pkmnType.Fire) {
+                    type = 0.5;
+                }
+                break;
+            case sun:
+                if (moveType == pkmnType.Water) {
+                    type = 0.5;
+                } else if (moveType == pkmnType.Fire) {
+                    type = 1.5;
+                }
+                break;
+            case DL:
+                if (moveType == pkmnType.Water) {
+                    type = 0;
+                } else if (moveType == pkmnType.Fire) {
+                    type = 1.5;
+                }
+                break;
+            case PS:
+                if (moveType == pkmnType.Water) {
+                    type = 1.5;
+                } else if (moveType == pkmnType.Fire) {
+                    type = 0;
+                }
+                break;
+            case none:
+                break;
         }
 
         //Total Multiplier Calculation
