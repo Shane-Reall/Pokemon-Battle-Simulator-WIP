@@ -1,6 +1,8 @@
 import java.util.Scanner;
 import java.util.Random;
 
+import static java.lang.System.exit;
+
 enum weatherType { //All weather types that affect damage
     none,
     sun,
@@ -9,7 +11,7 @@ enum weatherType { //All weather types that affect damage
     PS
 }
 
-enum pkmnType { //All pokemon types
+enum pkmnType { //All Pokemon Types
     Normal,
     Fighting,
     Flying,
@@ -27,7 +29,8 @@ enum pkmnType { //All pokemon types
     Ice,
     Dragon,
     Dark,
-    Fairy
+    Fairy,
+    Typeless
 }
 
 public class Main {
@@ -47,10 +50,13 @@ public class Main {
         boolean pbSecond = false;
         weatherType currentWeather = weatherType.none;
         boolean glaiveUsed = false;
-        int critChance = 0; //Ranges from 0 to 4 (If > 4 it will be the same as if it was four)
+        int critStage = 0; //Ranges from 0 to 4 (If > 4 it will be the same as if it was four)
+        boolean physicalCheck = false;
         boolean burned = false;
-        boolean[] otherChecks = new boolean[]{false};
-        pkmnType moveType = pkmnType.Normal;
+        String[] abilities = new String[4];
+        pkmnType moveType = pkmnType.Typeless;
+        pkmnType[] attackerType = new pkmnType[3];
+        pkmnType[] defenderType = new pkmnType[3];
         boolean shieldUp = false;
         boolean tShieldUp = false;
 
@@ -63,7 +69,7 @@ public class Main {
         double rndmMin = 0.85;
         double rndmMax = 1;
         double stab = 1;
-        double type = 1;
+        double type;
         double burn = 1;
         double other = 1;
         double zMove = 1;
@@ -95,42 +101,25 @@ public class Main {
             targets = 0.75;
         }
 
-        if (pbSecond) {
+        if (pbSecond) { //Currently Thinking about moving this into other
             pb = 0.25;
         }
 
-        switch (currentWeather) {
-            case rain:
-                if (moveType == pkmnType.Water) {
-                    type = 1.5;
-                } else if (moveType == pkmnType.Fire) {
-                    type = 0.5;
-                }
-                break;
-            case sun:
-                if (moveType == pkmnType.Water) {
-                    type = 0.5;
-                } else if (moveType == pkmnType.Fire) {
-                    type = 1.5;
-                }
-                break;
-            case DL:
-                if (moveType == pkmnType.Water) {
-                    type = 0;
-                } else if (moveType == pkmnType.Fire) {
-                    type = 1.5;
-                }
-                break;
-            case PS:
-                if (moveType == pkmnType.Water) {
-                    type = 1.5;
-                } else if (moveType == pkmnType.Fire) {
-                    type = 0;
-                }
-                break;
-            case none:
-                break;
+        type = weatherCheck(currentWeather, moveType);
+
+        if (glaiveUsed) { //Currently Thinking about moving this into other
+            glaiveRush = 2;
         }
+
+        critical = critCalc(random, critStage);
+
+
+
+        if (burned && physicalCheck) {
+            burn = 0.5;
+        }
+
+
 
         //Total Multiplier Calculation
         totalMultMin = targets * pb * weather * glaiveRush * critical* rndmMin * stab * type * burn * other * zMove * teraShield;
@@ -141,5 +130,107 @@ public class Main {
         totalDamageMax = (int) Math.floor(totalDamage * totalMultMax);
 
         System.out.print(totalDamageMin + "-" + totalDamageMax);
+    }
+
+    static double weatherCheck(weatherType currentWeather, pkmnType moveType) {
+        switch (currentWeather) {
+            case rain:
+                if (moveType == pkmnType.Water) {
+                    return 1.5;
+                } else if (moveType == pkmnType.Fire) {
+                    return 0.5;
+                }
+                break;
+            case sun:
+                if (moveType == pkmnType.Water) {
+                    return 0.5;
+                } else if (moveType == pkmnType.Fire) {
+                    return 1.5;
+                }
+                break;
+            case DL:
+                if (moveType == pkmnType.Water) {
+                    return 0;
+                } else if (moveType == pkmnType.Fire) {
+                    return 1.5;
+                }
+                break;
+            case PS:
+                if (moveType == pkmnType.Water) {
+                    return 1.5;
+                } else if (moveType == pkmnType.Fire) {
+                    return 0;
+                }
+                break;
+            case none:
+                return 1;
+        }
+        return 1;
+    }
+
+    static double critCalc(Random random, int critStage) {
+        if (critStage <= -1) {
+            critStage = 0;
+        } else if (critStage >= 5) {
+            critStage = 4;
+        }
+        int roll;
+        switch (critStage) {
+            case (0):
+                roll = random.nextInt(0,24);
+                if (roll/24 == 1) {
+                    return 1.5;
+                } else {
+                    return 1;
+                }
+            case (1):
+                roll = random.nextInt(0,8);
+                if (roll/8 == 1) {
+                    return 1.5;
+                } else {
+                    return 1;
+                }
+            case (2):
+                roll = random.nextInt(0,2);
+                if (roll/8 == 1) {
+                    return 1.5;
+                } else {
+                    return 1;
+                }
+            case (4):
+                return 1.5;
+            default:
+                System.out.println("Unforeseen Error: critCalc Reached Critical Failure" + '\n' + " Exiting Program...");
+                exit(1);
+        }
+        exit(1);
+        return 0;
+    }
+
+    static double typeEffectiveness(pkmnType moveType, pkmnType[] attackerType, pkmnType[] defenderType) {
+        double multiplier = 1;
+        switch (moveType) { //Type Effectiveness
+            case Normal:
+                if (defenderType[1] == pkmnType.Rock || defenderType[2] == pkmnType.Rock) {
+                    multiplier *= 0.5;
+                }
+                if (defenderType[1] == pkmnType.Ghost || defenderType[2] == pkmnType.Ghost) {
+                    multiplier *= 0;
+                }
+                if (defenderType[1] == pkmnType.Steel || defenderType[2] == pkmnType.Steel) {
+                    multiplier *= 0.5;
+                }
+                return multiplier;
+            case Fighting:
+                if (defenderType[1] == pkmnType.Normal || defenderType[2] == pkmnType.Normal) {
+                    multiplier *= 2;
+                }
+                if (defenderType[1] == pkmnType.Flying || defenderType[2] == pkmnType.Flying) {
+                    multiplier *= 0.5;
+                }
+                if (defenderType[1] == pkmnType.Poison || defenderType[2] == pkmnType.Poison) {
+                    multiplier *= 0.5;
+                }
+        }
     }
 }
