@@ -1,3 +1,5 @@
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.Random;
 
@@ -77,6 +79,10 @@ public class Main {
         double totalMultMin = 0;
         double totalMultMax = 0;
 
+        Map<pkmnType, Map<pkmnType, Double>> effectivenessChart = new HashMap<>();
+
+        loadMap((HashMap<pkmnType, Map<pkmnType, Double>>) effectivenessChart);
+
         Scanner input = new Scanner(System.in);
         Random random = new Random();
 
@@ -130,6 +136,14 @@ public class Main {
         totalDamageMax = (int) Math.floor(totalDamage * totalMultMax);
 
         System.out.print(totalDamageMin + "-" + totalDamageMax);
+    }
+
+    private static void loadMap(HashMap<pkmnType, Map<pkmnType, Double>> effectivenessChart) {
+        effectivenessChart.put(pkmnType.Normal, Map.of(
+                pkmnType.Rock, 0.5,
+                pkmnType.Ghost, 0.0,
+                pkmnType.Steel, 0.5
+        ));
     }
 
     static double weatherCheck(weatherType currentWeather, pkmnType moveType) {
@@ -207,30 +221,4 @@ public class Main {
         return 0;
     }
 
-    static double typeEffectiveness(pkmnType moveType, pkmnType[] attackerType, pkmnType[] defenderType) {
-        double multiplier = 1;
-        switch (moveType) { //Type Effectiveness
-            case Normal:
-                if (defenderType[1] == pkmnType.Rock || defenderType[2] == pkmnType.Rock) {
-                    multiplier *= 0.5;
-                }
-                if (defenderType[1] == pkmnType.Ghost || defenderType[2] == pkmnType.Ghost) {
-                    multiplier *= 0;
-                }
-                if (defenderType[1] == pkmnType.Steel || defenderType[2] == pkmnType.Steel) {
-                    multiplier *= 0.5;
-                }
-                return multiplier;
-            case Fighting:
-                if (defenderType[1] == pkmnType.Normal || defenderType[2] == pkmnType.Normal) {
-                    multiplier *= 2;
-                }
-                if (defenderType[1] == pkmnType.Flying || defenderType[2] == pkmnType.Flying) {
-                    multiplier *= 0.5;
-                }
-                if (defenderType[1] == pkmnType.Poison || defenderType[2] == pkmnType.Poison) {
-                    multiplier *= 0.5;
-                }
-        }
-    }
 }
