@@ -1,7 +1,4 @@
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.Random;
+import java.util.*;
 
 import static java.lang.System.exit;
 
@@ -57,8 +54,8 @@ public class Main {
         boolean burned = false;
         String[] abilities = new String[4];
         pkmnType moveType = pkmnType.Typeless;
-        pkmnType[] attackerType = new pkmnType[3];
-        pkmnType[] defenderType = new pkmnType[3];
+        pkmnType[] attackerType = {pkmnType.Typeless, pkmnType.Typeless, pkmnType.Typeless};
+        pkmnType[] defenderType = {pkmnType.Typeless, pkmnType.Typeless, pkmnType.Typeless};
         boolean shieldUp = false;
         boolean tShieldUp = false;
 
@@ -79,9 +76,9 @@ public class Main {
         double totalMultMin = 0;
         double totalMultMax = 0;
 
-        Map<pkmnType, Map<pkmnType, Double>> effectivenessChart = new HashMap<>();
+        HashMap<pkmnType, HashMap<pkmnType, Double>> effectivenessChart = new HashMap<>();
 
-        loadMap((HashMap<pkmnType, Map<pkmnType, Double>>) effectivenessChart);
+        loadMap(effectivenessChart);
 
         Scanner input = new Scanner(System.in);
         Random random = new Random();
@@ -119,7 +116,19 @@ public class Main {
 
         critical = critCalc(random, critStage);
 
+        for (int i = 0; i < 3; i++) {
+            if (moveType == attackerType[i]) {
+                stab = 1.5;
+                if (Objects.equals(abilities[0], "Adaptability")) {
+                    stab = 2.0;
+                }
+                break;
+            } else if (Objects.equals(abilities[0], "Adaptability")) {
+                stab = 1.5;
+            }
+        }
 
+         type = typeCalc(effectivenessChart, moveType, defenderType);
 
         if (burned && physicalCheck) {
             burn = 0.5;
@@ -138,12 +147,196 @@ public class Main {
         System.out.print(totalDamageMin + "-" + totalDamageMax);
     }
 
-    private static void loadMap(HashMap<pkmnType, Map<pkmnType, Double>> effectivenessChart) {
-        effectivenessChart.put(pkmnType.Normal, Map.of(
-                pkmnType.Rock, 0.5,
-                pkmnType.Ghost, 0.0,
-                pkmnType.Steel, 0.5
-        ));
+    private static double typeCalc(HashMap<pkmnType, HashMap<pkmnType, Double>> effectivenessChart, pkmnType moveType, pkmnType[] defenderType) {
+        double multiplier = 1.0;
+        HashMap<pkmnType, Double> effectivness = effectivenessChart.get(moveType);
+
+        for (int i = 0; i < 3; i++) {
+            if (effectivness.containsKey(defenderType[i])) {
+                multiplier *= effectivness.get(defenderType[i]);
+            }
+        }
+
+        System.out.println(multiplier);
+
+        return multiplier;
+    }
+
+    private static void loadMap(HashMap<pkmnType, HashMap<pkmnType, Double>> effectivenessChart) {
+        effectivenessChart.put(pkmnType.Normal, new HashMap<>() {
+            {
+                put(pkmnType.Rock, 0.5);
+                put(pkmnType.Ghost, 0.0);
+                put(pkmnType.Steel, 0.5);
+            }});
+        effectivenessChart.put(pkmnType.Fighting, new HashMap<>() {
+            {
+                put(pkmnType.Normal, 2.0);
+                put(pkmnType.Flying, 0.5);
+                put(pkmnType.Poison, 0.5);
+                put(pkmnType.Rock, 2.0);
+                put(pkmnType.Bug, 0.5);
+                put(pkmnType.Ghost, 0.0);
+                put(pkmnType.Steel, 2.0);
+                put(pkmnType.Psychic, 0.5);
+                put(pkmnType.Ice, 2.0);
+                put(pkmnType.Dark, 2.0);
+                put(pkmnType.Fairy, 0.5);
+            }});
+        effectivenessChart.put(pkmnType.Flying, new HashMap<>() {
+            {
+                put(pkmnType.Fighting, 2.0);
+                put(pkmnType.Rock, 0.5);
+                put(pkmnType.Bug, 2.0);
+                put(pkmnType.Steel, 0.5);
+                put(pkmnType.Grass, 2.0);
+                put(pkmnType.Electric, 0.5);
+            }});
+        effectivenessChart.put(pkmnType.Poison, new HashMap<>() {
+            {
+                put(pkmnType.Poison, 0.5);
+                put(pkmnType.Ground, 0.5);
+                put(pkmnType.Rock, 0.5);
+                put(pkmnType.Ghost, 0.5);
+                put(pkmnType.Steel, 0.0);
+                put(pkmnType.Grass, 2.0);
+                put(pkmnType.Fairy, 2.0);
+            }});
+        effectivenessChart.put(pkmnType.Ground, new HashMap<>() {
+            {
+                put(pkmnType.Flying, 0.0);
+                put(pkmnType.Poison, 2.0);
+                put(pkmnType.Rock, 2.0);
+                put(pkmnType.Bug, 0.5);
+                put(pkmnType.Steel, 2.0);
+                put(pkmnType.Fire, 2.0);
+                put(pkmnType.Grass, 0.5);
+                put(pkmnType.Electric, 2.0);
+            }});
+        effectivenessChart.put(pkmnType.Rock, new HashMap<>() {
+            {
+                put(pkmnType.Fighting, 0.5);
+                put(pkmnType.Flying, 2.0);
+                put(pkmnType.Ground, 0.5);
+                put(pkmnType.Bug, 2.0);
+                put(pkmnType.Steel, 0.5);
+                put(pkmnType.Fire, 2.0);
+                put(pkmnType.Ice, 2.0);
+            }});
+        effectivenessChart.put(pkmnType.Bug, new HashMap<>() {
+            {
+                put(pkmnType.Fighting, 0.5);
+                put(pkmnType.Flying, 0.5);
+                put(pkmnType.Poison, 0.5);
+                put(pkmnType.Ghost, 0.5);
+                put(pkmnType.Steel, 0.5);
+                put(pkmnType.Fire, 0.5);
+                put(pkmnType.Grass, 2.0);
+                put(pkmnType.Psychic, 2.0);
+                put(pkmnType.Dark, 2.0);
+                put(pkmnType.Fairy, 0.5);
+            }});
+        effectivenessChart.put(pkmnType.Ghost, new HashMap<>() {
+            {
+                put(pkmnType.Normal, 0.0);
+                put(pkmnType.Ghost, 2.0);
+                put(pkmnType.Psychic, 2.0);
+                put(pkmnType.Dark, 0.5);
+            }});
+        effectivenessChart.put(pkmnType.Steel, new HashMap<>() {
+            {
+                put(pkmnType.Rock, 2.0);
+                put(pkmnType.Steel, 0.5);
+                put(pkmnType.Fire, 0.5);
+                put(pkmnType.Water, 0.5);
+                put(pkmnType.Electric, 0.5);
+                put(pkmnType.Ice, 2.0);
+                put(pkmnType.Fairy, 2.0);
+            }});
+        effectivenessChart.put(pkmnType.Fire, new HashMap<>() {
+            {
+                put(pkmnType.Rock, 0.5);
+                put(pkmnType.Bug, 2.0);
+                put(pkmnType.Steel, 2.0);
+                put(pkmnType.Fire, 0.5);
+                put(pkmnType.Water, 0.5);
+                put(pkmnType.Grass, 2.0);
+                put(pkmnType.Ice, 2.0);
+                put(pkmnType.Dragon, 0.5);
+            }});
+        effectivenessChart.put(pkmnType.Water, new HashMap<>() {
+            {
+                put(pkmnType.Ground, 2.0);
+                put(pkmnType.Rock, 2.0);
+                put(pkmnType.Fire, 2.0);
+                put(pkmnType.Water, 0.5);
+                put(pkmnType.Grass, 0.5);
+                put(pkmnType.Dragon, 0.5);
+            }});
+        effectivenessChart.put(pkmnType.Grass, new HashMap<>() {
+            {
+                put(pkmnType.Flying, 0.5);
+                put(pkmnType.Poison, 0.5);
+                put(pkmnType.Ground, 2.0);
+                put(pkmnType.Rock, 2.0);
+                put(pkmnType.Bug, 0.5);
+                put(pkmnType.Steel, 0.5);
+                put(pkmnType.Fire, 0.5);
+                put(pkmnType.Water, 2.0);
+                put(pkmnType.Electric, 0.5);
+                put(pkmnType.Dragon, 0.5);
+            }});
+        effectivenessChart.put(pkmnType.Electric, new HashMap<>() {
+            {
+                put(pkmnType.Flying, 2.0);
+                put(pkmnType.Ground, 0.0);
+                put(pkmnType.Water, 2.0);
+                put(pkmnType.Grass, 0.5);
+                put(pkmnType.Electric, 0.5);
+                put(pkmnType.Dragon, 0.5);
+            }});
+        effectivenessChart.put(pkmnType.Psychic, new HashMap<>() {
+            {
+                put(pkmnType.Fighting, 2.0);
+                put(pkmnType.Poison, 2.0);
+                put(pkmnType.Steel, 0.5);
+                put(pkmnType.Psychic, 0.5);
+                put(pkmnType.Dark, 0.0);
+            }});
+        effectivenessChart.put(pkmnType.Ice, new HashMap<>() {
+            {
+                put(pkmnType.Flying, 2.0);
+                put(pkmnType.Ground, 2.0);
+                put(pkmnType.Steel, 0.5);
+                put(pkmnType.Fire, 0.5);
+                put(pkmnType.Water, 0.5);
+                put(pkmnType.Grass, 2.0);
+                put(pkmnType.Ice, 0.5);
+                put(pkmnType.Dragon, 2.0);
+            }});
+        effectivenessChart.put(pkmnType.Dragon, new HashMap<>() {
+            {
+                put(pkmnType.Steel, 0.5);
+                put(pkmnType.Dragon, 2.0);
+                put(pkmnType.Fairy, 0.0);
+            }});
+        effectivenessChart.put(pkmnType.Dark, new HashMap<>() {
+            {
+                put(pkmnType.Fighting, 0.5);
+                put(pkmnType.Ghost, 2.0);
+                put(pkmnType.Psychic, 2.0);
+                put(pkmnType.Dark, 0.5);
+                put(pkmnType.Fairy, 0.5);
+            }});
+        effectivenessChart.put(pkmnType.Fairy, new HashMap<>() {
+            {
+                put(pkmnType.Fighting, 2.0);
+                put(pkmnType.Poison, 0.5);
+                put(pkmnType.Steel, 0.5);
+                put(pkmnType.Fire, 0.5);
+                put(pkmnType.Dragon, 2.0);
+                put(pkmnType.Dark, 2.0);
+            }});
     }
 
     static double weatherCheck(weatherType currentWeather, pkmnType moveType) {
