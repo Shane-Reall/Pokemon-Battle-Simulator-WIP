@@ -1,10 +1,10 @@
 public class SpeciesClass {
-    private int hp;
-    private int atk;
-    private int def;
-    private int spatk;
-    private int spdef;
-    private int spd;
+    private double hp;
+    private double atk;
+    private double def;
+    private double spatk;
+    private double spdef;
+    private double spd;
     private pkmnType type1 = pkmnType.Typeless;
     private pkmnType type2 = pkmnType.Typeless;
     private pkmnType typeAddition = pkmnType.Typeless;
@@ -29,27 +29,27 @@ public class SpeciesClass {
         this.typeAddition = typeAddition;
     }
 
-    public int getHp() {
+    public double getHp() {
         return hp;
     }
 
-    public int getAtk() {
+    public double getAtk() {
         return atk;
     }
 
-    public int getDef() {
+    public double getDef() {
         return def;
     }
 
-    public int getSpatk() {
+    public double getSpatk() {
         return spatk;
     }
 
-    public int getSpdef() {
+    public double getSpdef() {
         return spdef;
     }
 
-    public int getSpd() {
+    public double getSpd() {
         return spd;
     }
 

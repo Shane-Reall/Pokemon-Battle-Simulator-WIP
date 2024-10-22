@@ -3,10 +3,10 @@ import java.util.*;
 public class Main extends BattleFunctions {
     public static void main(String[] args) {
         //Damage Variable
-        double level = 0;
+        double level = 100.00;
         MoveClass move = new MoveClass(60, pkmnType.Water, moveCtgry.Special, false, false);
-        double attack = 0;
-        double defense = 0;
+        double attack = 0.00;
+        double defense = 0.00;
         double totalDamage = 0;
         double totalDamageMin = 0;
         double totalDamageMax = 0;
@@ -46,8 +46,8 @@ public class Main extends BattleFunctions {
         Random random = new Random();
 
         //Damage Variable Assignment
-        System.out.print("Your Level: ");
-        level = input.nextInt();
+        //System.out.print("Your Level: ");
+        //level = input.nextInt();
 
         if (move.getCategory() == moveCtgry.Physical) {
             attack = attacker.getAtk();
@@ -89,7 +89,7 @@ public class Main extends BattleFunctions {
             }
         }
 
-         type = typeCalc(effectivenessChart, move.getType(), defender.getTypes());
+        type = typeCalc(effectivenessChart, move.getType(), defender.getTypes());
 
         if (burned && move.getCategory() == moveCtgry.Physical) {
             burn = 0.5;
@@ -104,15 +104,36 @@ public class Main extends BattleFunctions {
         System.out.println("totalDamage: " + totalDamage);
 
         //Total Multiplier Calculation
-        totalMultMin = targets * pb * weather * glaiveRush * critical * rndmMin * stab * type * burn * other * zMove * teraShield;
-        totalMultMax = targets * pb * weather * glaiveRush * critical * rndmMax * stab * type * burn * other * zMove * teraShield;
+        totalDamageMin = Math.floor(totalDamage * targets);
+        totalDamageMin = Math.floor(totalDamageMin * pb);
+        totalDamageMin = Math.floor(totalDamageMin * weather);
+        totalDamageMin = Math.floor(totalDamageMin * glaiveRush);
+        totalDamageMin = Math.floor(totalDamageMin * critical);
+        totalDamageMin = Math.floor(totalDamageMin * rndmMin);
+        totalDamageMin = Math.floor(totalDamageMin * stab);
+        totalDamageMin = Math.floor(totalDamageMin * type);
+        totalDamageMin = Math.floor(totalDamageMin * burn);
+        totalDamageMin = Math.floor(totalDamageMin * other);
+        totalDamageMin = Math.floor(totalDamageMin * zMove);
+        totalDamageMin = Math.floor(totalDamageMin * teraShield);
+
+        totalDamageMax = Math.floor(totalDamage * targets);
+        totalDamageMax = Math.floor(totalDamageMax * pb);
+        totalDamageMax = Math.floor(totalDamageMax * weather);
+        totalDamageMax = Math.floor(totalDamageMax * glaiveRush);
+        totalDamageMax = Math.floor(totalDamageMax * critical);
+        totalDamageMax = Math.floor(totalDamageMax * rndmMax);
+        totalDamageMax = Math.floor(totalDamageMax * stab);
+        totalDamageMax = Math.floor(totalDamageMax * type);
+        totalDamageMax = Math.floor(totalDamageMax * burn);
+        totalDamageMax = Math.floor(totalDamageMax * other);
+        totalDamageMax = Math.floor(totalDamageMax * zMove);
+        totalDamageMax = Math.floor(totalDamageMax * teraShield);
+
+        System.out.println("totalDamageMin: " + (totalDamageMin));
+        System.out.println("totalDamageMax: " + (totalDamageMax));
 
         //Total Damage Calculation
-        totalDamageMin = Math.floor(totalDamage * totalMultMin);
-        totalDamageMax = Math.floor(totalDamage * totalMultMax);
-
-        System.out.println("totalDamageMin: " + (totalDamage * totalMultMin));
-        System.out.println("totalDamageMax: " + (totalDamage * totalMultMax));
 
         System.out.print(totalDamageMin + "-" + totalDamageMax);
     }
