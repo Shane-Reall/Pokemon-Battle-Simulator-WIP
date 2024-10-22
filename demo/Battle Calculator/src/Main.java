@@ -4,27 +4,22 @@ public class Main extends BattleFunctions {
     public static void main(String[] args) {
         //Damage Variable
         double level = 0;
-        double power = 0;
+        MoveClass move = new MoveClass(60, pkmnType.Water, moveCtgry.Special, false, false);
         double attack = 0;
         double defense = 0;
         double totalDamage = 0;
-        int totalDamageMin = 0;
-        int totalDamageMax = 0;
-        SpeciesClass attacker = new SpeciesClass(0,0,0,0,0,0, pkmnType.Typeless, pkmnType.Typeless,"Good as Gold", 0.00);
-        SpeciesClass defender = new SpeciesClass(0,0,0,0,0,0, pkmnType.Typeless, pkmnType.Typeless,"Good as Gold", 0.00);
+        double totalDamageMin = 0;
+        double totalDamageMax = 0;
+        SpeciesClass attacker = new SpeciesClass(241,166,164,124,132,122, pkmnType.Water, pkmnType.Typeless,"Torrent", 20.9);
+        SpeciesClass defender = new SpeciesClass(231,156,116,176,136,126, pkmnType.Fire, pkmnType.Typeless,"Blaze", 5.50);
 
         //Variable Checkers
         boolean multBattle = false;
-        boolean spreadMove = false;
         boolean pbSecond = false;
         weatherType currentWeather = weatherType.none;
         boolean glaiveUsed = false;
         int critStage = 0; //Ranges from 0 to 4 (If > 4 it will be the same as if it was four)
-        boolean physicalCheck = false;
         boolean burned = false;
-        pkmnType moveType = pkmnType.Typeless;
-        boolean shieldUp = false;
-        boolean tShieldUp = false;
 
         //Multiplier Variable
         double targets = 1;
@@ -54,20 +49,20 @@ public class Main extends BattleFunctions {
         System.out.print("Your Level: ");
         level = input.nextInt();
 
-        System.out.print("Your Attacking Stat: ");
-        attack = input.nextInt();
+        if (move.getCategory() == moveCtgry.Physical) {
+            attack = attacker.getAtk();
+            defense = defender.getDef();
+        } else if (move.getCategory() == moveCtgry.Special) {
+            attack = attacker.getSpatk();
+            defense = defender.getSpdef();
+        }
 
-        System.out.print("Opponent Defending Stat: ");
-        defense = input.nextInt();
-
-        System.out.print("Attacking Move's Power: ");
-        power = input.nextInt();
 
         //Calculate Damage
-        totalDamage = (((((2*level)/5)+2) * power * (attack/defense))/50)+2;
+        totalDamage = (Math.floor(Math.floor(Math.floor(2 * level / 5 + 2) * move.getBase() * attack / defense) / 50) + 2);
 
         //Individual Multiplier Checks
-        if (multBattle && spreadMove) {
+        if (multBattle && move.isSpread()) {
             targets = 0.75;
         }
 
@@ -75,16 +70,16 @@ public class Main extends BattleFunctions {
             pb = 0.25;
         }
 
-        type = weatherCheck(currentWeather, moveType);
+        weather = weatherCheck(currentWeather, move.getType());
 
         if (glaiveUsed) { //Currently Thinking about moving this into other
             glaiveRush = 2;
         }
 
-        critical = critCalc(random, critStage);
+        //critical = critCalc(random, critStage);
 
         for (int i = 0; i < 3; i++) {
-            if (moveType == attacker.getTypes()[i]) {
+            if (move.getType() == attacker.getTypes()[i]) {
                 stab = 1.5;
                 if (Objects.equals(attacker.getAbility(), "Adaptability")) {
                     stab = 2.0;
@@ -94,21 +89,30 @@ public class Main extends BattleFunctions {
             }
         }
 
-         type = typeCalc(effectivenessChart, moveType, defender.getTypes());
+         type = typeCalc(effectivenessChart, move.getType(), defender.getTypes());
 
-        if (burned && physicalCheck) {
+        if (burned && move.getCategory() == moveCtgry.Physical) {
             burn = 0.5;
         }
 
         other = otherMulti();
 
+        System.out.println("stab: " + stab);
+        System.out.println("type: " + type);
+        System.out.println("attack: " + attack);
+        System.out.println("defense: " + defense);
+        System.out.println("totalDamage: " + totalDamage);
+
         //Total Multiplier Calculation
-        totalMultMin = targets * pb * weather * glaiveRush * critical* rndmMin * stab * type * burn * other * zMove * teraShield;
-        totalMultMax = targets * pb * weather * glaiveRush * critical* rndmMax * stab * type * burn * other * zMove * teraShield;
+        totalMultMin = targets * pb * weather * glaiveRush * critical * rndmMin * stab * type * burn * other * zMove * teraShield;
+        totalMultMax = targets * pb * weather * glaiveRush * critical * rndmMax * stab * type * burn * other * zMove * teraShield;
 
         //Total Damage Calculation
-        totalDamageMin = (int) Math.floor(totalDamage * totalMultMin);
-        totalDamageMax = (int) Math.floor(totalDamage * totalMultMax);
+        totalDamageMin = Math.floor(totalDamage * totalMultMin);
+        totalDamageMax = Math.floor(totalDamage * totalMultMax);
+
+        System.out.println("totalDamageMin: " + (totalDamage * totalMultMin));
+        System.out.println("totalDamageMax: " + (totalDamage * totalMultMax));
 
         System.out.print(totalDamageMin + "-" + totalDamageMax);
     }
