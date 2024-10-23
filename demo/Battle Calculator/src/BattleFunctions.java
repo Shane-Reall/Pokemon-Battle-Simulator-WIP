@@ -4,8 +4,9 @@ import java.util.Random;
 import static java.lang.System.exit;
 
 public class BattleFunctions {
-    static double otherMulti() {
-        return 1.0;
+    static double otherMulti(MoveClass move, SpeciesClass attacker, SpeciesClass defender) {
+
+        return 1;
     }
 
     static double typeCalc(HashMap<pkmnType, HashMap<pkmnType, Double>> effectivenessChart, pkmnType moveType, pkmnType[] defenderType) {
@@ -17,8 +18,6 @@ public class BattleFunctions {
                 multiplier *= effectivness.get(defenderType[i]);
             }
         }
-
-        System.out.println(multiplier);
 
         return multiplier;
     }
@@ -273,5 +272,23 @@ public class BattleFunctions {
         }
         exit(1);
         return 0;
+    }
+
+    static double totalCalc(double totalDamage, double targets, double pb, double weather, double glaiveRush, double critical, double rndm, double stab, double type, double burn, double other, double zMove, double teraShield) {
+        double calculation;
+        calculation = Math.floor(totalDamage * targets);
+        calculation = Math.floor(calculation * pb);
+        calculation = Math.floor(calculation * weather);
+        calculation = Math.floor(calculation * glaiveRush);
+        calculation = Math.floor(calculation * critical);
+        calculation = Math.floor(calculation * rndm);
+        calculation = Math.floor(calculation * stab);
+        calculation = Math.floor(calculation * type);
+        calculation = Math.floor(calculation * burn);
+        calculation = Math.floor(calculation * other);
+        calculation = Math.floor(calculation * zMove);
+        calculation = Math.floor(calculation * teraShield);
+        return calculation;
+
     }
 }

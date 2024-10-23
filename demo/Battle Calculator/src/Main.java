@@ -4,19 +4,19 @@ public class Main extends BattleFunctions {
     public static void main(String[] args) {
         //Damage Variable
         double level = 100.00;
-        MoveClass move = new MoveClass(60, pkmnType.Water, moveCtgry.Special, false, false);
+        MoveClass move = new MoveClass(0, pkmnType.Typeless, moveCtgry.Status, false, false);
         double attack = 0.00;
         double defense = 0.00;
-        double totalDamage = 0;
-        double totalDamageMin = 0;
-        double totalDamageMax = 0;
-        SpeciesClass attacker = new SpeciesClass(241,166,164,124,132,122, pkmnType.Water, pkmnType.Typeless,"Torrent", 20.9);
-        SpeciesClass defender = new SpeciesClass(231,156,116,176,136,126, pkmnType.Fire, pkmnType.Typeless,"Blaze", 5.50);
+        double totalDamage;
+        double totalDamageMin;
+        double totalDamageMax;
+        SpeciesClass attacker = new SpeciesClass(0,0,0,0,0,0, pkmnType.Typeless, pkmnType.Typeless,"Null", 0);
+        SpeciesClass defender = new SpeciesClass(0,0,0,0,0,0, pkmnType.Typeless, pkmnType.Typeless,"Null", 0);
 
         //Variable Checkers
         boolean multBattle = false;
         boolean pbSecond = false;
-        weatherType currentWeather = weatherType.none;
+        currentField field = new currentField();
         boolean glaiveUsed = false;
         int critStage = 0; //Ranges from 0 to 4 (If > 4 it will be the same as if it was four)
         boolean burned = false;
@@ -24,7 +24,7 @@ public class Main extends BattleFunctions {
         //Multiplier Variable
         double targets = 1;
         double pb = 1;
-        double weather = 1;
+        double weather;
         double glaiveRush = 1;
         double critical = 1;
         double rndmMin = 0.85;
@@ -35,19 +35,10 @@ public class Main extends BattleFunctions {
         double other = 1;
         double zMove = 1;
         double teraShield = 1;
-        double totalMultMin = 0;
-        double totalMultMax = 0;
 
         HashMap<pkmnType, HashMap<pkmnType, Double>> effectivenessChart = new HashMap<>();
 
         loadMap(effectivenessChart);
-
-        Scanner input = new Scanner(System.in);
-        Random random = new Random();
-
-        //Damage Variable Assignment
-        //System.out.print("Your Level: ");
-        //level = input.nextInt();
 
         if (move.getCategory() == moveCtgry.Physical) {
             attack = attacker.getAtk();
@@ -70,7 +61,7 @@ public class Main extends BattleFunctions {
             pb = 0.25;
         }
 
-        weather = weatherCheck(currentWeather, move.getType());
+        weather = weatherCheck(field.getWeather(), move.getType());
 
         if (glaiveUsed) { //Currently Thinking about moving this into other
             glaiveRush = 2;
@@ -95,43 +86,12 @@ public class Main extends BattleFunctions {
             burn = 0.5;
         }
 
-        other = otherMulti();
-
-        System.out.println("stab: " + stab);
-        System.out.println("type: " + type);
-        System.out.println("attack: " + attack);
-        System.out.println("defense: " + defense);
-        System.out.println("totalDamage: " + totalDamage);
+        other = otherMulti(move, attacker, defender);
 
         //Total Multiplier Calculation
-        totalDamageMin = Math.floor(totalDamage * targets);
-        totalDamageMin = Math.floor(totalDamageMin * pb);
-        totalDamageMin = Math.floor(totalDamageMin * weather);
-        totalDamageMin = Math.floor(totalDamageMin * glaiveRush);
-        totalDamageMin = Math.floor(totalDamageMin * critical);
-        totalDamageMin = Math.floor(totalDamageMin * rndmMin);
-        totalDamageMin = Math.floor(totalDamageMin * stab);
-        totalDamageMin = Math.floor(totalDamageMin * type);
-        totalDamageMin = Math.floor(totalDamageMin * burn);
-        totalDamageMin = Math.floor(totalDamageMin * other);
-        totalDamageMin = Math.floor(totalDamageMin * zMove);
-        totalDamageMin = Math.floor(totalDamageMin * teraShield);
 
-        totalDamageMax = Math.floor(totalDamage * targets);
-        totalDamageMax = Math.floor(totalDamageMax * pb);
-        totalDamageMax = Math.floor(totalDamageMax * weather);
-        totalDamageMax = Math.floor(totalDamageMax * glaiveRush);
-        totalDamageMax = Math.floor(totalDamageMax * critical);
-        totalDamageMax = Math.floor(totalDamageMax * rndmMax);
-        totalDamageMax = Math.floor(totalDamageMax * stab);
-        totalDamageMax = Math.floor(totalDamageMax * type);
-        totalDamageMax = Math.floor(totalDamageMax * burn);
-        totalDamageMax = Math.floor(totalDamageMax * other);
-        totalDamageMax = Math.floor(totalDamageMax * zMove);
-        totalDamageMax = Math.floor(totalDamageMax * teraShield);
-
-        System.out.println("totalDamageMin: " + (totalDamageMin));
-        System.out.println("totalDamageMax: " + (totalDamageMax));
+        totalDamageMin = totalCalc(totalDamage, targets, pb, weather, glaiveRush, critical, rndmMin, stab, type, burn, other, zMove, teraShield);
+        totalDamageMax = totalCalc(totalDamage, targets, pb, weather, glaiveRush, critical, rndmMax, stab, type, burn, other, zMove, teraShield);
 
         //Total Damage Calculation
 
