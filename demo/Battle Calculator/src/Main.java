@@ -4,14 +4,14 @@ public class Main extends BattleFunctions {
     public static void main(String[] args) {
         //Damage Variable
         double level = 100.00;
-        MoveClass move = new MoveClass(0, pkmnType.Typeless, moveCtgry.Status, false, false);
+        MoveClass move = new MoveClass(moveList.Splash,0, pkmnType.Typeless, moveCtgry.Status, false, false);
         double attack = 0.00;
         double defense = 0.00;
         double totalDamage;
         double totalDamageMin;
         double totalDamageMax;
-        SpeciesClass attacker = new SpeciesClass(0,0,0,0,0,0, pkmnType.Typeless, pkmnType.Typeless,"Null", 0);
-        SpeciesClass defender = new SpeciesClass(0,0,0,0,0,0, pkmnType.Typeless, pkmnType.Typeless,"Null", 0);
+        SpeciesClass attacker = new SpeciesClass(0,0,0,0,0,0, pkmnType.Electric, pkmnType.Electric, abilityList.none, 0, true, status.none);
+        SpeciesClass defender = new SpeciesClass(0,0,0,0,0,0, pkmnType.Electric, pkmnType.Electric, abilityList.none, 0, true, status.none);
 
         //Variable Checkers
         boolean multBattle = false;
@@ -19,7 +19,6 @@ public class Main extends BattleFunctions {
         currentField field = new currentField();
         boolean glaiveUsed = false;
         int critStage = 0; //Ranges from 0 to 4 (If > 4 it will be the same as if it was four)
-        boolean burned = false;
 
         //Multiplier Variable
         double targets = 1;
@@ -53,7 +52,7 @@ public class Main extends BattleFunctions {
         totalDamage = (Math.floor(Math.floor(Math.floor(2 * level / 5 + 2) * move.getBase() * attack / defense) / 50) + 2);
 
         //Individual Multiplier Checks
-        if (multBattle && move.isSpread()) {
+        if ((field.getBattle() == battleType.multi || field.getBattle() == battleType.triple) && move.isSpread()) {
             targets = 0.75;
         }
 
@@ -70,11 +69,15 @@ public class Main extends BattleFunctions {
         //critical = critCalc(random, critStage);
 
         for (int i = 0; i < 3; i++) {
+            if (move.getType() == pkmnType.Typeless) {
+                break;
+            }
             if (move.getType() == attacker.getTypes()[i]) {
                 stab = 1.5;
                 if (Objects.equals(attacker.getAbility(), "Adaptability")) {
                     stab = 2.0;
                 }
+                break;
             } else if (Objects.equals(attacker.getAbility(), "Adaptability")) {
                 stab = 1.5;
             }
@@ -82,7 +85,7 @@ public class Main extends BattleFunctions {
 
         type = typeCalc(effectivenessChart, move.getType(), defender.getTypes());
 
-        if (burned && move.getCategory() == moveCtgry.Physical) {
+        if (attacker.getStated() == status.Burn && move.getCategory() == moveCtgry.Physical) {
             burn = 0.5;
         }
 
@@ -95,6 +98,6 @@ public class Main extends BattleFunctions {
 
         //Total Damage Calculation
 
-        System.out.print(totalDamageMin + "-" + totalDamageMax);
+        System.out.print((int) totalDamageMin + "-" + (int) totalDamageMax);
     }
 }

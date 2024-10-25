@@ -5,8 +5,14 @@ import static java.lang.System.exit;
 
 public class BattleFunctions {
     static double otherMulti(MoveClass move, SpeciesClass attacker, SpeciesClass defender) {
+        double multipliers = 1;
 
-        return 1;
+        if ((move.getName() == moveList.Behemoth_Bash || move.getName() == moveList.Behemoth_Blade || move.getName() == moveList.Dynamax_Cannon) && move.getBase() == 0.2) { //No check for Dynamax Yet
+
+        }
+        if ()
+
+        return multipliers;
     }
 
     static double typeCalc(HashMap<pkmnType, HashMap<pkmnType, Double>> effectivenessChart, pkmnType moveType, pkmnType[] defenderType) {
@@ -14,7 +20,9 @@ public class BattleFunctions {
         HashMap<pkmnType, Double> effectivness = effectivenessChart.get(moveType);
 
         for (int i = 0; i < 3; i++) {
-            if (effectivness.containsKey(defenderType[i])) {
+            if (moveType == pkmnType.Typeless || defenderType[i] == pkmnType.Typeless) {
+                return multiplier;
+            } else if (effectivness.containsKey(defenderType[i])) {
                 multiplier *= effectivness.get(defenderType[i]);
             }
         }

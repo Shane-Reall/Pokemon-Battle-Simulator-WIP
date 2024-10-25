@@ -8,11 +8,13 @@ public class SpeciesClass {
     private pkmnType type1 = pkmnType.Typeless;
     private pkmnType type2 = pkmnType.Typeless;
     private pkmnType typeAddition = pkmnType.Typeless;
-    private String ability;
+    private abilityList ability;
     private double weight;
+    private boolean grounded;
+    private status stated;
 
 
-    public SpeciesClass(int hp, int atk, int def, int spatk, int spdef, int spd, pkmnType type1, pkmnType type2, String ability, double weight) {
+    public SpeciesClass(int hp, int atk, int def, int spatk, int spdef, int spd, pkmnType type1, pkmnType type2, abilityList ability, double weight, boolean grounded, status stated) {
         this.hp = hp;
         this.atk = atk;
         this.def = def;
@@ -23,6 +25,8 @@ public class SpeciesClass {
         this.type2 = type2;
         this.ability = ability;
         this.weight = weight;
+        this.grounded = grounded;
+        this.stated = stated;
     }
 
     public void setTypeAddition(pkmnType typeAddition) {
@@ -61,7 +65,7 @@ public class SpeciesClass {
         return type2;
     }
 
-    public String getAbility() {
+    public abilityList getAbility() {
         return ability;
     }
 
@@ -75,5 +79,21 @@ public class SpeciesClass {
 
     public pkmnType[] getTypes() {
         return new pkmnType[]{type1,type2,typeAddition};
+    }
+
+    public status getStated() {
+        return stated;
+    }
+
+    public void setStated(status stated) {
+        this.stated = stated;
+    }
+
+    public boolean isGrounded() {
+        return grounded;
+    }
+
+    public void setGrounded(boolean grounded) {
+        this.grounded = grounded;
     }
 }
