@@ -1,17 +1,18 @@
+import java.io.*;
 import java.util.*;
 
 public class Main extends BattleFunctions {
     public static void main(String[] args) {
         //Damage Variable
-        double level = 100.00;
-        MoveClass move = new MoveClass(moveList.Splash,0, pkmnType.Typeless, moveCtgry.Status, false, false);
+        int level = 100;
+        MoveClass move = new MoveClass(moveList.Dark_Pulse,80, pkmnType.Dark, moveCtgry.Special, false, false);
         double attack = 0.00;
         double defense = 0.00;
         double totalDamage;
         double totalDamageMin;
         double totalDamageMax;
-        SpeciesClass attacker = new SpeciesClass(0,0,0,0,0,0, pkmnType.Electric, pkmnType.Electric, abilityList.none, 0, true, status.none);
-        SpeciesClass defender = new SpeciesClass(0,0,0,0,0,0, pkmnType.Electric, pkmnType.Electric, abilityList.none, 0, true, status.none);
+        SpeciesClass attacker = new SpeciesClass(281,152,152,210,220,216, pkmnType.Dark, pkmnType.Typeless, abilityList.none, 0, true, status.none);
+        SpeciesClass defender = new SpeciesClass(381,176,256,186,276,206, pkmnType.Psychic, pkmnType.Typeless, abilityList.none, 0, true, status.none);
 
         //Variable Checkers
         boolean multBattle = false;
@@ -37,7 +38,11 @@ public class Main extends BattleFunctions {
 
         HashMap<pkmnType, HashMap<pkmnType, Double>> effectivenessChart = new HashMap<>();
 
-        loadMap(effectivenessChart);
+        //createEffectivenessChart();
+
+        //saveEffectivenessChart();
+
+        effectivenessChart = loadMap();
 
         if (move.getCategory() == moveCtgry.Physical) {
             attack = attacker.getAtk();

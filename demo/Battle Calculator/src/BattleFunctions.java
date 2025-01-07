@@ -1,16 +1,19 @@
+import java.io.*;
 import java.util.HashMap;
 import java.util.Random;
 
 import static java.lang.System.exit;
 
 public class BattleFunctions {
+
+    private static final long serialVersionUID = 1L;
+
     static double otherMulti(MoveClass move, SpeciesClass attacker, SpeciesClass defender) {
         double multipliers = 1;
 
         if ((move.getName() == moveList.Behemoth_Bash || move.getName() == moveList.Behemoth_Blade || move.getName() == moveList.Dynamax_Cannon) && move.getBase() == 0.2) { //No check for Dynamax Yet
 
         }
-        if ()
 
         return multipliers;
     }
@@ -30,7 +33,10 @@ public class BattleFunctions {
         return multiplier;
     }
 
-    static void loadMap(HashMap<pkmnType, HashMap<pkmnType, Double>> effectivenessChart) {
+    public static HashMap<pkmnType, HashMap<pkmnType, Double>> createEffectivenessChart() {
+
+        HashMap<pkmnType, HashMap<pkmnType, Double>> effectivenessChart = new HashMap<>();
+
         effectivenessChart.put(pkmnType.Normal, new HashMap<>() {
             {
                 put(pkmnType.Rock, 0.5);
@@ -205,6 +211,48 @@ public class BattleFunctions {
                 put(pkmnType.Dragon, 2.0);
                 put(pkmnType.Dark, 2.0);
             }});
+
+        return effectivenessChart;
+    }
+
+    public static void saveEffectivenessChart() {
+        try {
+            // Create directories if they don't exist
+            new File("Serialisation").mkdirs();
+
+            // Create and save the chart
+            HashMap<pkmnType, HashMap<pkmnType, Double>> chart = createEffectivenessChart();
+
+            FileOutputStream fileOut = new FileOutputStream("Serialisation/effectivenessChart.ser");
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(chart);
+            out.close();
+            fileOut.close();
+            System.out.println("Effectiveness chart has been serialized");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    static HashMap loadMap() {
+
+        try {
+            FileInputStream fileInput = new FileInputStream("Serialisation/effectivenessChart.ser");
+            ObjectInputStream objectInput = new ObjectInputStream(fileInput);
+
+            HashMap<pkmnType, HashMap<pkmnType, Double>> effectivenessChart = (HashMap<pkmnType, HashMap<pkmnType, Double>>) objectInput.readObject(); // Cast to the correct type
+
+            objectInput.close();
+            fileInput.close();
+
+            System.out.println("Deserialized HashMap: Complete");
+
+            return effectivenessChart;
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+
     }
 
     static double weatherCheck(weatherType currentWeather, pkmnType moveType) {
