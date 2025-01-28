@@ -1,10 +1,10 @@
 public enum abilityList { //Will Become HashMap but is an Enum for Now
     none,
-    Adaptability,
-    Aerilate,
+    Adaptability,       //STAB +0.5
+    Aerilate,           //+20% Damage on Normal Moves & Normal Moves Become Flying
     Aftermath,
     Air_Lock,
-    Analytic,
+    Analytic,           //Lower Speed = +30% Damage
     Anger_Point,
     Anger_Shell,
     Anticipation,
@@ -12,21 +12,21 @@ public enum abilityList { //Will Become HashMap but is an Enum for Now
     Armor_Tail,
     Aroma_Veil,
     As_One,
-    Aura_Break,
+    Aura_Break,         //Fairy Aura -> -25% Fairy Moves && Dark Aura -> -25% Dark Aura
     Bad_Dreams,
     Ball_Fetch,
-    Battery,
+    Battery,            //+30% Special Moves ALLIES
     Battle_Armor,
     Battle_Bond,
-    Beads_of_Ruin,
+    Beads_of_Ruin,      //Lower All Special Defense Stats by 25%
     Beast_Boost,
     Berserk,
     Big_Pecks,
-    Blaze,
-    Bulletproof,
+    Blaze,              //33% HP = +50% Fire Moves
+    Bulletproof,        //Immune to Move List Bullet
     Cheek_Pouch,
     Chilling_Neigh,
-    Chlorophyll,
+    Chlorophyll,        //Sun = Speed x2
     Clear_Body,
     Cloud_Nine,
     Color_Change,
@@ -42,89 +42,89 @@ public enum abilityList { //Will Become HashMap but is an Enum for Now
     Curious_Medicine,
     Cursed_Body,
     Cute_Charm,
-    Damp,
+    Damp,               //Immune to Self Destruct and Explosion
     Dancer,
-    Dark_Aura,
+    Dark_Aura,          //Dark Moves +33%
     Dauntless_Shield,
-    Dazzling,
-    Defeatist,
+    Dazzling,           //Immune to Move List Priority > 0
+    Defeatist,          //HP <= 50% -> Offense = 50%
     Defiant,
     Delta_Stream,
     Desolate_Land,
     Disguise,
     Download,
-    Dragons_Maw,
+    Dragons_Maw,        //Dragon Move -> Offense Multiplied 1.5
     Drizzle,
     Drought,
-    Dry_Skin,
+    Dry_Skin,           //Immune Water Moves && +25% Damage From Fire Moves
     Early_Bird,
-    Earth_Eater,
+    Earth_Eater,        //Immune Ground Moves
     Effect_Spore,
     Electric_Surge,
-    Electromorphosis,
+    Electromorphosis,   //No Calculator Affect but reminder to add Charged Condition, Showdown refuses to add it for "Too much hand holding"
     Embody_Aspect,
     Emergency_Exit,
-    Fairy_Aura,
-    Filter,
+    Fairy_Aura,         //Fairy Moves +33%
+    Filter,             //Super Effective Moves -25%
     Flame_Body,
-    Flare_Boost,
-    Flash_Fire,
-    Flower_Gift,
+    Flare_Boost,        //Burn = +50 Special Moves
+    Flash_Fire,         //Immune Fire && Hit by Fire -> +50% Offense When Useing Fire Moves
+    Flower_Gift,        //Sun = Attack & Special Defense +50% (Include Allies)
     Flower_Veil,
-    Fluffy,
+    Fluffy,             //50% Contact Damage && 2x Damage Fire
     Forecast,
     Forewarn,
-    Friend_Guard,
+    Friend_Guard,       //Multi-Battle = -25% Damage to ALLIES ONLY
     Frisk,
     Full_Metal_Body,
-    Fur_Coat,
+    Fur_Coat,           //Double Defense
     Gale_Wings,
-    Galvanize,
+    Galvanize,          //+20% Damage on Normal Moves & Normal Moves Become Electric
     Gluttony,
     Good_as_Gold,
     Gooey,
-    Gorilla_Tactics,
-    Grass_Pelt,
+    Gorilla_Tactics,    //Increase Attack by 50%
+    Grass_Pelt,         //Grassy Terrain = Defense +50%
     Grassy_Surge,
     Grim_Neigh,
     Guard_Dog,
     Gulp_Missile,
-    Guts,
-    Hadron_Engine,
+    Guts,               //Non-Volatile Status = +50% Attack
+    Hadron_Engine,      //Electric Terrain = Special Attack +33%
     Harvest,
     Healer,
-    Heatproof,
-    Heavy_Metal,
+    Heatproof,          //Lowers Opponent's Attack or Special Attack by 50% when using Fire Move && Halves Burn Damage
+    Heavy_Metal,        //Doubles Weight
     Honey_Gather,
     Hospitality,
-    Huge_Power,
+    Huge_Power,         //Doubles Attack Stat
     Hunger_Switch,
-    Hustle,
+    Hustle,             //Increases Attack 50%
     Hydration,
     Hyper_Cutter,
     Ice_Body,
     Ice_Face,
-    Ice_Scales,
+    Ice_Scales,         //Halves Damage From Special Moves
     Illuminate,
     Illusion,
     Immunity,
     Imposter,
-    Infiltrator,
+    Infiltrator,        //Bypass Reflect, Light Screen, Safeguard, and Mist
     Innards_Out,
     Inner_Focus,
     Insomnia,
     Intimidate,
     Intrepid_Sword,
     Iron_Barbs,
-    Iron_Fist,
+    Iron_Fist,          //Increases Moves 20% in List Punching Moves
     Justified,
     Keen_Eye,
-    Klutz,
+    Klutz,              //Item Buffs and Debuffs = 0
     Leaf_Guard,
     Levitate,
-    Libero,
-    Light_Metal,
-    Lightning_Rod,
+    Libero,             //Also has STAB
+    Light_Metal,        //Halves Weight Rounded Down
+    Lightning_Rod,      //Electric Immunity
     Limber,
     Lingering_Aroma,
     Liquid_Ooze,

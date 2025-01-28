@@ -4,6 +4,7 @@ public enum weatherType { //All weather types that affect damage
     rain,
     DL,
     PS,
+    DS,
     hail,
     sand
 }

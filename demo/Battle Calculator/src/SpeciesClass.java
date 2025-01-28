@@ -8,13 +8,13 @@ public class SpeciesClass {
     private pkmnType type1 = pkmnType.Typeless;
     private pkmnType type2 = pkmnType.Typeless;
     private pkmnType typeAddition = pkmnType.Typeless;
-    private abilityList ability;
+    private Ability ability;
     private double weight;
     private boolean grounded;
     private status stated;
 
 
-    public SpeciesClass(int hp, int atk, int def, int spatk, int spdef, int spd, pkmnType type1, pkmnType type2, abilityList ability, double weight, boolean grounded, status stated) {
+    public SpeciesClass(int hp, int atk, int def, int spatk, int spdef, int spd, pkmnType type1, pkmnType type2, Ability ability, double weight, boolean grounded, status stated) {
         this.hp = hp;
         this.atk = atk;
         this.def = def;
@@ -65,7 +65,7 @@ public class SpeciesClass {
         return type2;
     }
 
-    public abilityList getAbility() {
+    public Ability getAbility() {
         return ability;
     }
 

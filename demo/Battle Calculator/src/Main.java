@@ -1,4 +1,3 @@
-import java.io.*;
 import java.util.*;
 
 public class Main extends BattleFunctions {
@@ -11,8 +10,8 @@ public class Main extends BattleFunctions {
         double totalDamage;
         double totalDamageMin;
         double totalDamageMax;
-        SpeciesClass attacker = new SpeciesClass(281,152,152,210,220,216, pkmnType.Dark, pkmnType.Typeless, abilityList.none, 0, true, status.none);
-        SpeciesClass defender = new SpeciesClass(381,176,256,186,276,206, pkmnType.Psychic, pkmnType.Typeless, abilityList.none, 0, true, status.none);
+        SpeciesClass attacker = new SpeciesClass(281,152,152,210,220,216, pkmnType.Dark, pkmnType.Typeless, null, 0, true, status.none);
+        SpeciesClass defender = new SpeciesClass(381,176,256,186,276,206, pkmnType.Psychic, pkmnType.Typeless, null, 0, true, status.none);
 
         //Variable Checkers
         boolean multBattle = false;
