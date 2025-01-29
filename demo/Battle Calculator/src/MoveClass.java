@@ -5,15 +5,17 @@ public class MoveClass {
     private moveCtgry category;
     private boolean contact;
     private boolean spread;
+    private boolean sound;
 
 
-    public MoveClass(moveList name, int base, pkmnType type, moveCtgry category, boolean contact, boolean spread) {
+    public MoveClass(moveList name, int base, pkmnType type, moveCtgry category, boolean contact, boolean spread, boolean sound) {
         this.name = name;
         this.base = base;
         this.type = type;
         this.category = category;
         this.contact = contact;
         this.spread = spread;
+        this.sound = sound;
     }
 
 
@@ -41,7 +43,7 @@ public class MoveClass {
         return name;
     }
 
-    public void setName(moveList name) {
-        this.name = name;
+    public boolean isSound() {
+        return sound;
     }
 }

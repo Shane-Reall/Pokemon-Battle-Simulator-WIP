@@ -1,10 +1,10 @@
 public enum abilityList { //Will Become HashMap but is an Enum for Now
     none,
-    Adaptability,       //STAB +0.5
-    Aerilate,           //+20% Damage on Normal Moves & Normal Moves Become Flying
+    Adaptability,       //STAB +0.5 (Attacker)
+    Aerilate,           //+20% Damage on Normal Moves & Normal Moves Become Flying (Attacker)
     Aftermath,
     Air_Lock,
-    Analytic,           //Lower Speed = +30% Damage
+    Analytic,           //Lower Speed = +30% Damage (Attacker)
     Anger_Point,
     Anger_Shell,
     Anticipation,
@@ -12,21 +12,21 @@ public enum abilityList { //Will Become HashMap but is an Enum for Now
     Armor_Tail,
     Aroma_Veil,
     As_One,
-    Aura_Break,         //Fairy Aura -> -25% Fairy Moves && Dark Aura -> -25% Dark Aura
+    Aura_Break,         //Fairy Aura -> -25% Fairy Moves && Dark Aura -> -25% Dark Aura (Both)
     Bad_Dreams,
     Ball_Fetch,
-    Battery,            //+30% Special Moves ALLIES
+    Battery,            //+30% Special Moves ALLIES (Check Box)
     Battle_Armor,
     Battle_Bond,
-    Beads_of_Ruin,      //Lower All Special Defense Stats by 25%
+    Beads_of_Ruin,      //Lower All Special Defense Stats by 25% (Check Box)
     Beast_Boost,
     Berserk,
     Big_Pecks,
-    Blaze,              //33% HP = +50% Fire Moves
-    Bulletproof,        //Immune to Move List Bullet
+    Blaze,              //33% HP = +50% Fire Moves (Attacker)
+    Bulletproof,        //Immune to Move List Bullet (Defender)
     Cheek_Pouch,
     Chilling_Neigh,
-    Chlorophyll,        //Sun = Speed x2
+    Chlorophyll,        //Sun = Speed x2 (Attacker)
     Clear_Body,
     Cloud_Nine,
     Color_Change,
@@ -42,42 +42,42 @@ public enum abilityList { //Will Become HashMap but is an Enum for Now
     Curious_Medicine,
     Cursed_Body,
     Cute_Charm,
-    Damp,               //Immune to Self Destruct and Explosion
+    Damp,               //Immune to Self Destruct and Explosion (Defender)
     Dancer,
-    Dark_Aura,          //Dark Moves +33%
+    Dark_Aura,          //Dark Moves +33% (Both)
     Dauntless_Shield,
-    Dazzling,           //Immune to Move List Priority > 0
-    Defeatist,          //HP <= 50% -> Offense = 50%
+    Dazzling,           //Immune to Move List Priority > 0 (Defender)
+    Defeatist,          //HP <= 50% -> Offense = 50% (Attacker)
     Defiant,
     Delta_Stream,
     Desolate_Land,
     Disguise,
     Download,
-    Dragons_Maw,        //Dragon Move -> Offense Multiplied 1.5
+    Dragons_Maw,        //Dragon Move -> Offense Multiplied 1.5 (Attacker)
     Drizzle,
     Drought,
-    Dry_Skin,           //Immune Water Moves && +25% Damage From Fire Moves
+    Dry_Skin,           //Immune Water Moves && +25% Damage From Fire Moves (Defender)
     Early_Bird,
-    Earth_Eater,        //Immune Ground Moves
+    Earth_Eater,        //Immune Ground Moves (Defender)
     Effect_Spore,
     Electric_Surge,
     Electromorphosis,   //No Calculator Affect but reminder to add Charged Condition, Showdown refuses to add it for "Too much hand holding"
     Embody_Aspect,
     Emergency_Exit,
-    Fairy_Aura,         //Fairy Moves +33%
-    Filter,             //Super Effective Moves -25%
+    Fairy_Aura,         //Fairy Moves +33% (Both)
+    Filter,             //Super Effective Moves -25% (Defender)
     Flame_Body,
-    Flare_Boost,        //Burn = +50 Special Moves
-    Flash_Fire,         //Immune Fire && Hit by Fire -> +50% Offense When Useing Fire Moves
-    Flower_Gift,        //Sun = Attack & Special Defense +50% (Include Allies)
+    Flare_Boost,        //Burn = +50 Special Moves (Attacker)
+    Flash_Fire,         //Immune Fire && Hit by Fire -> +50% Offense When Using Fire Moves (Both)
+    Flower_Gift,        //Sun = Attack & Special Defense +50% (Include Allies) (Both)
     Flower_Veil,
-    Fluffy,             //50% Contact Damage && 2x Damage Fire
+    Fluffy,             //50% Contact Damage && 2x Damage Fire (Defender)
     Forecast,
     Forewarn,
-    Friend_Guard,       //Multi-Battle = -25% Damage to ALLIES ONLY
+    Friend_Guard,       //Multi-Battle = -25% Damage to ALLIES ONLY (Defender)
     Frisk,
     Full_Metal_Body,
-    Fur_Coat,           //Double Defense
+    Fur_Coat,           //Double Defense (Both)
     Gale_Wings,
     Galvanize,          //+20% Damage on Normal Moves & Normal Moves Become Electric
     Gluttony,

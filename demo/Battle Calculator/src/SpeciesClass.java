@@ -1,5 +1,6 @@
 public class SpeciesClass {
     private double hp;
+    private double currentHp;
     private double atk;
     private double def;
     private double spatk;
@@ -8,14 +9,17 @@ public class SpeciesClass {
     private pkmnType type1 = pkmnType.Typeless;
     private pkmnType type2 = pkmnType.Typeless;
     private pkmnType typeAddition = pkmnType.Typeless;
-    private Ability ability;
+    private abilityList ability;
+    private itemList item;
     private double weight;
     private boolean grounded;
     private status stated;
 
 
-    public SpeciesClass(int hp, int atk, int def, int spatk, int spdef, int spd, pkmnType type1, pkmnType type2, Ability ability, double weight, boolean grounded, status stated) {
+
+    public SpeciesClass(int hp, int currentHp, int atk, int def, int spatk, int spdef, int spd, pkmnType type1, pkmnType type2, abilityList ability, itemList item, double weight, boolean grounded, status stated) {
         this.hp = hp;
+        this.currentHp = currentHp;
         this.atk = atk;
         this.def = def;
         this.spatk = spatk;
@@ -24,6 +28,7 @@ public class SpeciesClass {
         this.type1 = type1;
         this.type2 = type2;
         this.ability = ability;
+        this.item = item;
         this.weight = weight;
         this.grounded = grounded;
         this.stated = stated;
@@ -35,6 +40,10 @@ public class SpeciesClass {
 
     public double getHp() {
         return hp;
+    }
+
+    public double getCurrentHp() {
+        return currentHp;
     }
 
     public double getAtk() {
@@ -65,7 +74,7 @@ public class SpeciesClass {
         return type2;
     }
 
-    public Ability getAbility() {
+    public abilityList getAbility() {
         return ability;
     }
 
@@ -95,5 +104,9 @@ public class SpeciesClass {
 
     public void setGrounded(boolean grounded) {
         this.grounded = grounded;
+    }
+
+    public itemList getItem() {
+        return item;
     }
 }

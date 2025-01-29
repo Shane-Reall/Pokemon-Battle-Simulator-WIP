@@ -4,14 +4,14 @@ public class Main extends BattleFunctions {
     public static void main(String[] args) {
         //Damage Variable
         int level = 100;
-        MoveClass move = new MoveClass(moveList.Dark_Pulse,80, pkmnType.Dark, moveCtgry.Special, false, false);
+        MoveClass move = new MoveClass(moveList.Dark_Pulse,80, pkmnType.Dark, moveCtgry.Special, false, false, false);
         double attack = 0.00;
         double defense = 0.00;
         double totalDamage;
         double totalDamageMin;
         double totalDamageMax;
-        SpeciesClass attacker = new SpeciesClass(281,152,152,210,220,216, pkmnType.Dark, pkmnType.Typeless, null, 0, true, status.none);
-        SpeciesClass defender = new SpeciesClass(381,176,256,186,276,206, pkmnType.Psychic, pkmnType.Typeless, null, 0, true, status.none);
+        SpeciesClass attacker = new SpeciesClass(281, 281,152,152,210,220,216, pkmnType.Dark, pkmnType.Typeless, abilityList.none, null, 0, true, status.none);
+        SpeciesClass defender = new SpeciesClass(381, 381,176,256,186,276,206, pkmnType.Psychic, pkmnType.Typeless, abilityList.none, null, 0, true, status.none);
 
         //Variable Checkers
         boolean multBattle = false;
@@ -43,6 +43,8 @@ public class Main extends BattleFunctions {
 
         effectivenessChart = loadMap();
 
+        Checks checks = new Checks(false, false, false, false, false, false, false, false, 0);
+
         if (move.getCategory() == moveCtgry.Physical) {
             attack = attacker.getAtk();
             defense = defender.getDef();
@@ -72,28 +74,13 @@ public class Main extends BattleFunctions {
 
         //critical = critCalc(random, critStage);
 
-        for (int i = 0; i < 3; i++) {
-            if (move.getType() == pkmnType.Typeless) {
-                break;
-            }
-            if (move.getType() == attacker.getTypes()[i]) {
-                stab = 1.5;
-                if (Objects.equals(attacker.getAbility(), "Adaptability")) {
-                    stab = 2.0;
-                }
-                break;
-            } else if (Objects.equals(attacker.getAbility(), "Adaptability")) {
-                stab = 1.5;
-            }
-        }
-
         type = typeCalc(effectivenessChart, move.getType(), defender.getTypes());
 
         if (attacker.getStated() == status.Burn && move.getCategory() == moveCtgry.Physical) {
             burn = 0.5;
         }
 
-        other = otherMulti(move, attacker, defender);
+        other = otherMulti(move, attacker, defender, checks, effectivenessChart);
 
         //Total Multiplier Calculation
 

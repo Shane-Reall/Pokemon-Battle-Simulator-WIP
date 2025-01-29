@@ -8,14 +8,143 @@ public class BattleFunctions {
 
     private static final long serialVersionUID = 1L;
 
-    static double otherMulti(MoveClass move, SpeciesClass attacker, SpeciesClass defender) {
+    static double otherMulti(MoveClass move, SpeciesClass attacker, SpeciesClass defender, Checks checks, HashMap effectivenessChart) {
         double multipliers = 1;
 
-        if ((move.getName() == moveList.Behemoth_Bash || move.getName() == moveList.Behemoth_Blade || move.getName() == moveList.Dynamax_Cannon) && move.getBase() == 0.2) { //No check for Dynamax Yet
-
+        if ((move.getName().equals(moveList.Body_Slam) || move.getName().equals(moveList.Stomp) || move.getName().equals(moveList.Dragon_Rush) || move.getName().equals(moveList.Steamroller) || move.getName().equals(moveList.Heat_Crash) || move.getName().equals(moveList.Heavy_Slam) || move.getName().equals(moveList.Flying_Press) || move.getName().equals(moveList.Malicious_Moonsault) || move.getName().equals(moveList.Supercell_Slam)) && checks.isMinimized()) {
+            multipliers *= 2;
+        }
+        if ((move.getName().equals(moveList.Earthquake) || move.getName().equals(moveList.Magnitude)) && checks.isUnderground()) {
+            multipliers *= 2;
+        }
+        if ((move.getName().equals(moveList.Surf) || move.getName().equals(moveList.Whirlpool)) && checks.isUnderwater()) {
+            multipliers *= 2;
+        }
+        if (checks.isUnderwater()) {
+            multipliers *= 2;
+        }
+        if (checks.isAuroraVeil() && !defender.getAbility().equals(abilityList.Infiltrator)) {
+            multipliers *= 0.5;
+        } else if (checks.isReflect() && move.getCategory().equals(moveCtgry.Physical) && !defender.getAbility().equals(abilityList.Infiltrator)) {
+            multipliers *= 0.5;
+        } else if (checks.isLightScreen() && move.getCategory().equals(moveCtgry.Special) && !defender.getAbility().equals(abilityList.Infiltrator)) {
+            multipliers *= 0.5;
+        }
+        if (typeCalc(effectivenessChart, move.getType(), defender.getTypes()) > 1 && (move.getName().equals(moveList.Collision_Course) || move.getName().equals(moveList.Electro_Drift))) {
+            multipliers *= (5461.0/4096.0);
+        }
+        if (defender.getCurrentHp() == defender.getHp() && (defender.getAbility().equals(abilityList.Multiscale) || defender.getAbility().equals(abilityList.Shadow_Shield))) {
+            multipliers *= 0.5;
+        }
+        if (move.isContact() && defender.getAbility().equals(abilityList.Fluffy)) {
+            multipliers *= 0.5;
+        }
+        if (move.isSound() && defender.getAbility().equals(abilityList.Punk_Rock)) {
+            multipliers *= 0.5;
+        }
+        if (move.getCategory().equals(moveCtgry.Special) && defender.getAbility().equals(abilityList.Ice_Scales)) {
+            multipliers *= 0.5;
+        }
+        if (checks.isFriendGuard()) {
+            multipliers *= 0.5;
+        }
+        if (typeCalc(effectivenessChart, move.getType(), defender.getTypes()) > 1 && (defender.getAbility().equals(abilityList.Filter) || defender.getAbility().equals(abilityList.Prism_Armor) || defender.getAbility().equals(abilityList.Solid_Rock))) {
+            multipliers *= 0.75;
+        }
+        if (typeCalc(effectivenessChart, move.getType(), defender.getTypes()) > 1 && defender.getAbility().equals(abilityList.Neuroforce)) {
+            multipliers *= 1.25;
+        }
+        if (checks.isCrit() && defender.getAbility().equals(abilityList.Sniper)) {
+            multipliers *= 1.5;
+        }
+        if (typeCalc(effectivenessChart, move.getType(), defender.getTypes()) < 1 && defender.getAbility().equals(abilityList.Tinted_Lens)) {
+            multipliers *= 2;
+        }
+        if (move.getType().equals(pkmnType.Fire) && defender.getAbility().equals(abilityList.Fluffy)) {
+            multipliers *= 2;
+        }
+        if (berryCheck(defender, move, effectivenessChart)) {
+            if (defender.getAbility().equals(abilityList.Ripen)) {
+                multipliers *= 0.25;
+            }
+            else {
+                multipliers *= 0.5;
+            }
+        }
+        if (typeCalc(effectivenessChart, move.getType(), defender.getTypes()) < 1 && attacker.getItem().equals(itemList.Expert_Belt)) {
+            multipliers *= (4915.0/4096.0);
+        }
+        if (attacker.getItem().equals(itemList.Life_Orb)) {
+            multipliers *= (5324.0/4096.0);
+        }
+        if (attacker.getItem().equals(itemList.Metronome)) {
+            double holder = (1 + ((819.0/4096.0) * checks.getContinueCounter()));
+            if (holder > 2) {
+                multipliers *= 2;
+            } else {
+                multipliers *= holder;
+            }
         }
 
         return multipliers;
+    }
+
+    private static boolean berryCheck(SpeciesClass defender, MoveClass move, HashMap effectivenessChart) {
+        if (defender.getItem().equals(itemList.Chilan_Berry) && move.getType().equals(pkmnType.Normal)) {
+            return true;
+        }
+        if (defender.getItem().equals(itemList.Occa_Berry) && move.getType().equals(pkmnType.Fire) && typeCalc(effectivenessChart, move.getType(), defender.getTypes()) > 1) {
+            return true;
+        }
+        if (defender.getItem().equals(itemList.Passho_Berry) && move.getType().equals(pkmnType.Water) && typeCalc(effectivenessChart, move.getType(), defender.getTypes()) > 1) {
+            return true;
+        }
+        if (defender.getItem().equals(itemList.Wacan_Berry) && move.getType().equals(pkmnType.Electric) && typeCalc(effectivenessChart, move.getType(), defender.getTypes()) > 1) {
+            return true;
+        }
+        if (defender.getItem().equals(itemList.Rindo_Berry) && move.getType().equals(pkmnType.Grass) && typeCalc(effectivenessChart, move.getType(), defender.getTypes()) > 1) {
+            return true;
+        }
+        if (defender.getItem().equals(itemList.Yache_Berry) && move.getType().equals(pkmnType.Ice) && typeCalc(effectivenessChart, move.getType(), defender.getTypes()) > 1) {
+            return true;
+        }
+        if (defender.getItem().equals(itemList.Chople_Berry) && move.getType().equals(pkmnType.Fighting) && typeCalc(effectivenessChart, move.getType(), defender.getTypes()) > 1) {
+            return true;
+        }
+        if (defender.getItem().equals(itemList.Kebia_Berry) && move.getType().equals(pkmnType.Poison) && typeCalc(effectivenessChart, move.getType(), defender.getTypes()) > 1) {
+            return true;
+        }
+        if (defender.getItem().equals(itemList.Shuca_Berry) && move.getType().equals(pkmnType.Ground) && typeCalc(effectivenessChart, move.getType(), defender.getTypes()) > 1) {
+            return true;
+        }
+        if (defender.getItem().equals(itemList.Coba_Berry) && move.getType().equals(pkmnType.Flying) && typeCalc(effectivenessChart, move.getType(), defender.getTypes()) > 1) {
+            return true;
+        }
+        if (defender.getItem().equals(itemList.Payapa_Berry) && move.getType().equals(pkmnType.Psychic) && typeCalc(effectivenessChart, move.getType(), defender.getTypes()) > 1) {
+            return true;
+        }
+        if (defender.getItem().equals(itemList.Tanga_Berry) && move.getType().equals(pkmnType.Bug) && typeCalc(effectivenessChart, move.getType(), defender.getTypes()) > 1) {
+            return true;
+        }
+        if (defender.getItem().equals(itemList.Charti_Berry) && move.getType().equals(pkmnType.Rock) && typeCalc(effectivenessChart, move.getType(), defender.getTypes()) > 1) {
+            return true;
+        }
+        if (defender.getItem().equals(itemList.Kasib_Berry) && move.getType().equals(pkmnType.Ghost) && typeCalc(effectivenessChart, move.getType(), defender.getTypes()) > 1) {
+            return true;
+        }
+        if (defender.getItem().equals(itemList.Haban_Berry) && move.getType().equals(pkmnType.Dragon) && typeCalc(effectivenessChart, move.getType(), defender.getTypes()) > 1) {
+            return true;
+        }
+        if (defender.getItem().equals(itemList.Colbur_Berry) && move.getType().equals(pkmnType.Dark) && typeCalc(effectivenessChart, move.getType(), defender.getTypes()) > 1) {
+            return true;
+        }
+        if (defender.getItem().equals(itemList.Babiri_Berry) && move.getType().equals(pkmnType.Steel) && typeCalc(effectivenessChart, move.getType(), defender.getTypes()) > 1) {
+            return true;
+        }
+        if (defender.getItem().equals(itemList.Roseli_Berry) && move.getType().equals(pkmnType.Fairy) && typeCalc(effectivenessChart, move.getType(), defender.getTypes()) > 1) {
+            return true;
+        }
+        return false;
     }
 
     static double typeCalc(HashMap<pkmnType, HashMap<pkmnType, Double>> effectivenessChart, pkmnType moveType, pkmnType[] defenderType) {
