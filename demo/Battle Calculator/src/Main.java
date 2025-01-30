@@ -4,19 +4,18 @@ public class Main extends BattleFunctions {
     public static void main(String[] args) {
         //Damage Variable
         int level = 100;
-        MoveClass move = new MoveClass(moveList.Sucker_Punch,70, pkmnType.Dark, moveCtgry.Physical, false, false, false);
+        MoveClass move = new MoveClass(moveList.Sucker_Punch,70, pkmnType.Electric, moveCtgry.Physical, false, false, false);
         double attack = 0.00;
         double defense = 0.00;
         double totalDamage;
         double totalDamageMin;
         double totalDamageMax;
-        SpeciesClass attacker = new SpeciesClass(271, 271,359,156,167,157,273, pkmnType.Dark, pkmnType.Typeless, abilityList.Magic_Bounce, itemList.Life_Orb, 0, true, status.none);
+        SpeciesClass attacker = new SpeciesClass(271, 271,359,156,167,157,273, pkmnType.Dark, pkmnType.Typeless, abilityList.Magic_Bounce, itemList.Oran_Berry, 0, true, status.none);
         SpeciesClass defender = new SpeciesClass(241, 241,166,164,124,132,122, pkmnType.Water, pkmnType.Typeless, abilityList.Torrent, itemList.Oran_Berry, 0, true, status.none);
 
         //Variable Checkers
         boolean multBattle = false;
         boolean pbSecond = false;
-        currentField field = new currentField();
         boolean glaiveUsed = false;
         int critStage = 0; //Ranges from 0 to 4 (If > 4 it will be the same as if it was four)
 
@@ -43,9 +42,18 @@ public class Main extends BattleFunctions {
 
         effectivenessChart = loadMap();
 
-        Checks checks = new Checks(false, false, false, false, false, false, false, false, 0);
+        Checks checks = new Checks(false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, 0, weatherType.none, terrainType.none);
 
-        if (move.getCategory() == moveCtgry.Physical) {
+        if (move.getName().equals(moveList.Body_Press)) {
+            attack = attacker.getDef();
+            defense = defender.getDef();
+        } else if (move.getName().equals(moveList.Foul_Play)) {
+            attack = defender.getAtk();
+            defense = defender.getDef();
+        } else if (move.getName().equals(moveList.Psyshock) || move.getName().equals(moveList.Psystrike) || move.getName().equals(moveList.Secret_Sword)) {
+            attack = attacker.getSpatk();
+            defense = defender.getDef();
+        } else if (move.getCategory() == moveCtgry.Physical) {
             attack = attacker.getAtk();
             defense = defender.getDef();
         } else if (move.getCategory() == moveCtgry.Special) {
@@ -53,6 +61,8 @@ public class Main extends BattleFunctions {
             defense = defender.getSpdef();
         }
 
+        //Stat Changes and Modifications
+        
 
         //Calculate Damage
         totalDamage = (Math.floor(Math.floor(Math.floor(2 * level / 5 + 2) * move.getBase() * attack / defense) / 50) + 2);
@@ -62,7 +72,7 @@ public class Main extends BattleFunctions {
             stab = 1.5;
         }
 
-        if ((field.getBattle() == battleType.multi || field.getBattle() == battleType.triple) && move.isSpread()) {
+        if (checks.isDoubleBattle() && move.isSpread()) {
             targets = 0.75;
         }
 
@@ -70,7 +80,7 @@ public class Main extends BattleFunctions {
             pb = 0.25;
         }
 
-        weather = weatherCheck(field.getWeather(), move.getType());
+        weather = weatherCheck(checks.getWeather(), move.getType());
 
         if (glaiveUsed) { //Currently Thinking about moving this into other
             glaiveRush = 2;
@@ -93,6 +103,21 @@ public class Main extends BattleFunctions {
 
         //Total Damage Calculation
 
-        System.out.print((int) totalDamageMin + "-" + (int) totalDamageMax);
+        double percentageMin = 100.0 - (((defender.getHp() - totalDamageMin) / (double) defender.getHp()) * 100.0);
+        double percentageMax = 100.0 - (((defender.getHp() - totalDamageMax) / (double) defender.getHp()) * 100.0);
+        percentageMin = Math.floor(percentageMin * 10) / 10.0;
+        percentageMax = Math.floor(percentageMax * 10) / 10.0;
+
+        System.out.print((int) totalDamageMin + "-" + (int) totalDamageMax + " (");
+        System.out.printf("%.1f%%", percentageMin);
+        System.out.print(" - ");
+        System.out.printf("%.1f%%", percentageMax);
+        System.out.print(") -- ");
+        if (defender.getCurrentHp() < totalDamageMin) {
+            System.out.print("guaranteed OHKO");
+        } else {
+            int modular = (int) Math.ceil((defender.getCurrentHp() / totalDamageMin));
+            System.out.print("guaranteed " + modular + "HKO");
+        }
     }
 }
