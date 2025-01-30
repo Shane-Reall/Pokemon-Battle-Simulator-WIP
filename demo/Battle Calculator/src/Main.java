@@ -4,14 +4,14 @@ public class Main extends BattleFunctions {
     public static void main(String[] args) {
         //Damage Variable
         int level = 100;
-        MoveClass move = new MoveClass(moveList.Dark_Pulse,80, pkmnType.Dark, moveCtgry.Special, false, false, false);
+        MoveClass move = new MoveClass(moveList.Sucker_Punch,70, pkmnType.Dark, moveCtgry.Physical, false, false, false);
         double attack = 0.00;
         double defense = 0.00;
         double totalDamage;
         double totalDamageMin;
         double totalDamageMax;
-        SpeciesClass attacker = new SpeciesClass(281, 281,152,152,210,220,216, pkmnType.Dark, pkmnType.Typeless, abilityList.none, null, 0, true, status.none);
-        SpeciesClass defender = new SpeciesClass(381, 381,176,256,186,276,206, pkmnType.Psychic, pkmnType.Typeless, abilityList.none, null, 0, true, status.none);
+        SpeciesClass attacker = new SpeciesClass(271, 271,359,156,167,157,273, pkmnType.Dark, pkmnType.Typeless, abilityList.Magic_Bounce, itemList.Life_Orb, 0, true, status.none);
+        SpeciesClass defender = new SpeciesClass(241, 241,166,164,124,132,122, pkmnType.Water, pkmnType.Typeless, abilityList.Torrent, itemList.Oran_Berry, 0, true, status.none);
 
         //Variable Checkers
         boolean multBattle = false;
@@ -58,6 +58,10 @@ public class Main extends BattleFunctions {
         totalDamage = (Math.floor(Math.floor(Math.floor(2 * level / 5 + 2) * move.getBase() * attack / defense) / 50) + 2);
 
         //Individual Multiplier Checks
+        if (move.getType() == attacker.getType1() || move.getType() == attacker.getType2()) {
+            stab = 1.5;
+        }
+
         if ((field.getBattle() == battleType.multi || field.getBattle() == battleType.triple) && move.isSpread()) {
             targets = 0.75;
         }
