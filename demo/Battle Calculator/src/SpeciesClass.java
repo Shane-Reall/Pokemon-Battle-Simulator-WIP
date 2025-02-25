@@ -1,4 +1,6 @@
-public class SpeciesClass {
+import java.io.Serializable;
+
+public class SpeciesClass implements Serializable {
     private double hp;
     private double currentHp;
     private double atk;

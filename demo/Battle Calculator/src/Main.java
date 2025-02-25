@@ -2,16 +2,33 @@ import java.util.*;
 
 public class Main extends BattleFunctions {
     public static void main(String[] args) {
+        HashMap<pkmnType, HashMap<pkmnType, Double>> effectivenessChart;
+        HashMap<String, SpeciesClass> pokemonList;
+
+        effectivenessChart = loadMapEC();
+        pokemonList = loadMapPL();
+
         //Damage Variable
         int level = 100;
-        MoveClass move = new MoveClass(moveList.Sucker_Punch,70, pkmnType.Electric, moveCtgry.Physical, false, false, false);
-        double attack = 0.00;
-        double defense = 0.00;
+        MoveClass move = new MoveClass(moveList.Psychic,90, pkmnType.Psychic, moveCtgry.Special, false, false, false);
         double totalDamage;
         double totalDamageMin;
         double totalDamageMax;
-        SpeciesClass attacker = new SpeciesClass(271, 271,359,156,167,157,273, pkmnType.Dark, pkmnType.Typeless, abilityList.Magic_Bounce, itemList.Oran_Berry, 0, true, status.none);
-        SpeciesClass defender = new SpeciesClass(241, 241,166,164,124,132,122, pkmnType.Water, pkmnType.Typeless, abilityList.Torrent, itemList.Oran_Berry, 0, true, status.none);
+        SpeciesClass attacker = pokemonList.get("Chandelure");
+        SpeciesClass defender = pokemonList.get("Torchic");
+
+        int hp = calcHP((int) attacker.getHp(), 0, 0, level);
+        String[] natures = natureGet("Careful");
+
+        attacker = new SpeciesClass (hp, hp, statCalc((int) attacker.getAtk(), 0, 0, level, natures, "Attack"), statCalc((int) attacker.getDef(), 0, 0, level, natures, "Defense"), statCalc((int) attacker.getSpatk(), 0, 0, level, natures, "Sp.Attack"),statCalc((int) attacker.getSpdef(), 0, 0, level, natures, "Sp.Defense"), statCalc((int) attacker.getSpd(), 0, 0, level, natures, "Speed"), attacker.getType1(), attacker.getType2(), attacker.getAbility(), itemList.None, attacker.getWeight(), grounded(attacker.getType1(), attacker.getType2(), attacker.getAbility()), status.none);
+
+        hp = calcHP((int) defender.getHp(), 0, 0, level);
+        natures = natureGet("Bashful");
+
+        defender = new SpeciesClass (hp, hp, statCalc((int) defender.getAtk(), 0, 0, level, natures, "Attack"), statCalc((int) defender.getDef(), 0, 0, level, natures, "Defense"), statCalc((int) defender.getSpatk(), 0, 0, level, natures, "Sp.Attack"),statCalc((int) defender.getSpdef(), 0, 0, level, natures, "Sp.Defense"), statCalc((int) defender.getSpd(), 0, 0, level, natures, "Speed"), defender.getType1(), defender.getType2(), defender.getAbility(), itemList.None, defender.getWeight(), grounded(defender.getType1(), defender.getType2(), defender.getAbility()), status.none);
+
+        double attack = 0.00;
+        double defense = 0.00;
 
         //Variable Checkers
         boolean multBattle = false;
@@ -33,14 +50,6 @@ public class Main extends BattleFunctions {
         double other = 1;
         double zMove = 1;
         double teraShield = 1;
-
-        HashMap<pkmnType, HashMap<pkmnType, Double>> effectivenessChart = new HashMap<>();
-
-        //createEffectivenessChart();
-
-        //saveEffectivenessChart();
-
-        effectivenessChart = loadMap();
 
         Checks checks = new Checks(false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, 0, weatherType.none, terrainType.none);
 

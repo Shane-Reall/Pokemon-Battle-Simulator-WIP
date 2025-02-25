@@ -1,4 +1,5 @@
 public enum itemList {
+    None,
     Ability_Shield,
     Abomasite,
     Absolite,
