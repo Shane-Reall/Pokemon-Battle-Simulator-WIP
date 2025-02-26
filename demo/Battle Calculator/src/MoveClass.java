@@ -1,5 +1,6 @@
-public class MoveClass {
-    private moveList name;
+import java.io.Serializable;
+
+public class MoveClass implements Serializable {
     private double base;
     private pkmnType type;
     private moveCtgry category;
@@ -8,8 +9,7 @@ public class MoveClass {
     private boolean sound;
 
 
-    public MoveClass(moveList name, int base, pkmnType type, moveCtgry category, boolean contact, boolean spread, boolean sound) {
-        this.name = name;
+    public MoveClass(int base, pkmnType type, moveCtgry category, boolean contact, boolean spread, boolean sound) {
         this.base = base;
         this.type = type;
         this.category = category;
@@ -37,10 +37,6 @@ public class MoveClass {
 
     public boolean isSpread() {
         return spread;
-    }
-
-    public moveList getName() {
-        return name;
     }
 
     public boolean isSound() {

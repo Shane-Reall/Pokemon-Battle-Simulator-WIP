@@ -1,19 +1,20 @@
 public class StatCalculation {
     static int calcHP (int baseHP, int IV, int EV, int level) {
-        int hp = (((2*baseHP+IV+(EV/4))*level)/100) + level + 10;
 
-        return hp;
+        return (((2*baseHP+IV+(EV/4))*level)/100) + level + 10;
     }
 
     static int statCalc (int base, int IV, int EV, int level, String[] nature, String statName) {
         int stat = 0;
 
+        int clacStat = (((2 * base + IV + (EV / 4)) * level) / 100) + 5;
+
         if (nature[0].equals(statName)) {
-            stat = (int) (((((2 * base + IV + (EV / 4)) * level) / 100) + 5) * 1.1);
+            stat = (int) (clacStat * 1.1);
         } else if (nature[1].equals(statName)) {
-            stat = (int) (((((2 * base + IV + (EV / 4)) * level) / 100) + 5) * 0.9);
+            stat = (int) (clacStat * 0.9);
         } else {
-            stat = ((((2 * base + IV + (EV / 4)) * level) / 100) + 5);
+            stat = clacStat;
         }
 
         return stat;

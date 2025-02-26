@@ -7,13 +7,16 @@ public class Main extends BattleFunctions {
 
         HashMap<pkmnType, HashMap<pkmnType, Double>> effectivenessChart;
         HashMap<String, SpeciesClass> pokemonList;
+        HashMap<String, MoveClass> moveList;
 
         effectivenessChart = loadMapEC();
         pokemonList = loadMapPL();
+        moveList = loadMapML();
 
         //Damage Variable
         int level = 100;
-        MoveClass move = new MoveClass(moveList.Shadow_Ball,120, pkmnType.Dark, moveCtgry.Physical, false, false, false);
+        String currentMove = "Tackle";
+        MoveClass move = moveList.get(currentMove);
         double totalDamage;
         double totalDamageMin;
         double totalDamageMax;
@@ -31,7 +34,7 @@ public class Main extends BattleFunctions {
         String defendNature = "Bashful";
 
         SpeciesClass attacker = pokemonList.get("Mewtwo");
-        SpeciesClass defender = pokemonList.get("Gengar");
+        SpeciesClass defender = pokemonList.get("Sandshrew");
 
         int hp = calcHP((int) attacker.getHp(), attackerIV[0], attackerEV[0], level);
         String[] natures = natureGet(attackNature);
@@ -75,13 +78,13 @@ public class Main extends BattleFunctions {
         attacker = modifications(statBoostsA, attacker);
         defender = modifications(statBoostsD, defender);
 
-        if (move.getName().equals(moveList.Body_Press)) {
+        if (currentMove.equals("Body_Press")) {
             attack = attacker.getDef();
             defense = defender.getDef();
-        } else if (move.getName().equals(moveList.Foul_Play)) {
+        } else if (currentMove.equals("Foul_Play")) {
             attack = defender.getAtk();
             defense = defender.getDef();
-        } else if (move.getName().equals(moveList.Psyshock) || move.getName().equals(moveList.Psystrike) || move.getName().equals(moveList.Secret_Sword)) {
+        } else if (currentMove.equals("Psyshock") || currentMove.equals("Psystrike") || currentMove.equals("Secret_Sword")) {
             attack = attacker.getSpatk();
             defense = defender.getDef();
         } else if (move.getCategory() == moveCtgry.Physical) {
@@ -122,7 +125,7 @@ public class Main extends BattleFunctions {
             burn = 0.5;
         }
 
-        other = otherMulti(move, attacker, defender, checks, effectivenessChart);
+        other = otherMulti(move, attacker, defender, checks, effectivenessChart, currentMove);
 
         //Total Multiplier Calculation
 
