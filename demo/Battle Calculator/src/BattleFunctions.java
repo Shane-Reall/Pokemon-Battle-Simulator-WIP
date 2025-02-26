@@ -20,9 +20,6 @@ public class BattleFunctions extends StatCalculation {
         if ((move.getName().equals(moveList.Surf) || move.getName().equals(moveList.Whirlpool)) && checks.isUnderwater()) {
             multipliers *= 2;
         }
-        if (checks.isUnderwater()) {
-            multipliers *= 2;
-        }
         if (checks.isAuroraVeil() && !defender.getAbility().equals(abilityList.Infiltrator)) {
             multipliers *= 0.5;
         } else if (checks.isReflect() && move.getCategory().equals(moveCtgry.Physical) && !defender.getAbility().equals(abilityList.Infiltrator)) {
@@ -75,7 +72,7 @@ public class BattleFunctions extends StatCalculation {
             multipliers *= 1.2;
         }
         if (attacker.getItem().equals(itemList.Life_Orb)) {
-            multipliers *= 1.3;
+            multipliers *= 130.0 / 100.0;
         }
         if (attacker.getItem().equals(itemList.Metronome)) {
             double holder = (1 + (0.2 * checks.getContinueCounter()));
@@ -85,6 +82,8 @@ public class BattleFunctions extends StatCalculation {
                 multipliers *= holder;
             }
         }
+
+        System.out.println("Mult: " + multipliers);
 
         return multipliers;
     }
@@ -1597,7 +1596,7 @@ public class BattleFunctions extends StatCalculation {
             objectInput.close();
             fileInput.close();
 
-            System.out.println("Deserialized HashMap: Complete");
+            //System.out.println("Deserialized HashMap: Complete");
 
             return effectivenessChart;
         } catch (IOException | ClassNotFoundException e) {
@@ -1617,13 +1616,97 @@ public class BattleFunctions extends StatCalculation {
             objectInput.close();
             fileInput.close();
 
-            System.out.println("Deserialized HashMap: Complete");
+            //System.out.println("Deserialized HashMap: Complete");
 
             return pokemonList;
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    static SpeciesClass modifications(int[] changes, SpeciesClass pokemon) {
+        int stat = 0;
+        int affectedStat = 0;
+
+        for (int i = 0; i < 5; i++) {
+            switch (i) {
+                case 0:
+                    affectedStat = (int) pokemon.getAtk();
+                    break;
+                case 1:
+                    affectedStat = (int) pokemon.getDef();
+                    break;
+                case 2:
+                    affectedStat = (int) pokemon.getSpatk();
+                    break;
+                case 3:
+                    affectedStat = (int) pokemon.getSpdef();
+                    break;
+                case 4:
+                    affectedStat = (int) pokemon.getSpd();
+                    break;
+            }
+            switch (changes[i]) {
+                case -6:
+                    stat = (int) (affectedStat * (2.0/8));
+                    break;
+                case -5:
+                    stat = (int) (affectedStat * (2.0/7));
+                    break;
+                case -4:
+                    stat = (int) (affectedStat * (2.0/6));
+                    break;
+                case -3:
+                    stat = (int) (affectedStat * (2.0/5));
+                    break;
+                case -2:
+                    stat = (int) (affectedStat * (2.0/4));
+                    break;
+                case -1:
+                    stat = (int) (affectedStat * (2.0/3));
+                    break;
+                case 0:
+                    stat = affectedStat;
+                    break;
+                case 1:
+                    stat = (int) (affectedStat * (3.0/2));
+                    break;
+                case 2:
+                    stat = (int) (affectedStat * (4.0/2));
+                    break;
+                case 3:
+                    stat = (int) (affectedStat * (5.0/2));
+                    break;
+                case 4:
+                    stat = (int) (affectedStat * (6.0/2));
+                    break;
+                case 5:
+                    stat = (int) (affectedStat * (7.0/2));
+                    break;
+                case 6:
+                    stat = (int) (affectedStat * (8.0/2));
+                    break;
+            }
+            switch (i) {
+                case 0:
+                    pokemon.setAtk(stat);
+                    break;
+                case 1:
+                    pokemon.setDef(stat);
+                    break;
+                case 2:
+                    pokemon.setSpatk(stat);
+                    break;
+                case 3:
+                    pokemon.setSpdef(stat);
+                    break;
+                case 4:
+                    pokemon.setSpd(stat);
+                    break;
+            }
+        }
+        return pokemon;
     }
 
     static double weatherCheck(weatherType currentWeather, pkmnType moveType) {
@@ -1712,10 +1795,30 @@ public class BattleFunctions extends StatCalculation {
         calculation = Math.floor(calculation * stab);
         calculation = Math.floor(calculation * type);
         calculation = Math.floor(calculation * burn);
-        calculation = Math.floor(calculation * other);
-        calculation = Math.floor(calculation * zMove);
-        calculation = Math.floor(calculation * teraShield);
-        return calculation;
+        calculation = (calculation * other);
+        //calculation = Math.floor(calculation * zMove);
+        //calculation = Math.floor(calculation * teraShield);
 
+        return Math.round(calculation);
+    }
+
+    static double totalCalc2(double totalDamage, double targets, double pb, double weather, double glaiveRush, double critical, double rndm, double stab, double type, double burn, double other, double zMove, double teraShield) {
+        double calculation2;
+        calculation2 = (totalDamage * targets);
+        calculation2 = (calculation2 * pb);
+        calculation2 = (calculation2 * weather);
+        calculation2 = (calculation2 * glaiveRush);
+        calculation2 = (calculation2 * critical);
+        calculation2 = (calculation2 * rndm);
+        calculation2 = (calculation2 * stab);
+        calculation2 = (calculation2 * type);
+        calculation2 = (calculation2 * burn);
+        calculation2 = (calculation2 * other);
+        calculation2 = (calculation2 * zMove);
+        calculation2 = (calculation2 * teraShield);
+
+        calculation2 = Math.round(calculation2);
+
+        return calculation2;
     }
 }

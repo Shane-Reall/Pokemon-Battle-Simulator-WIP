@@ -2,6 +2,9 @@ import java.util.*;
 
 public class Main extends BattleFunctions {
     public static void main(String[] args) {
+
+        //saveEffectivenessChart();
+
         HashMap<pkmnType, HashMap<pkmnType, Double>> effectivenessChart;
         HashMap<String, SpeciesClass> pokemonList;
 
@@ -10,25 +13,40 @@ public class Main extends BattleFunctions {
 
         //Damage Variable
         int level = 100;
-        MoveClass move = new MoveClass(moveList.Psychic,90, pkmnType.Psychic, moveCtgry.Special, false, false, false);
+        MoveClass move = new MoveClass(moveList.Shadow_Ball,120, pkmnType.Dark, moveCtgry.Physical, false, false, false);
         double totalDamage;
         double totalDamageMin;
         double totalDamageMax;
-        SpeciesClass attacker = pokemonList.get("Chandelure");
-        SpeciesClass defender = pokemonList.get("Torchic");
 
-        int hp = calcHP((int) attacker.getHp(), 0, 0, level);
-        String[] natures = natureGet("Careful");
+        int[] statBoostsA = {0,0,0,0,0}; //Max and Min of +/- 6 [Attack, Defense, Sp.Attack, Sp.Defense, Speed]
 
-        attacker = new SpeciesClass (hp, hp, statCalc((int) attacker.getAtk(), 0, 0, level, natures, "Attack"), statCalc((int) attacker.getDef(), 0, 0, level, natures, "Defense"), statCalc((int) attacker.getSpatk(), 0, 0, level, natures, "Sp.Attack"),statCalc((int) attacker.getSpdef(), 0, 0, level, natures, "Sp.Defense"), statCalc((int) attacker.getSpd(), 0, 0, level, natures, "Speed"), attacker.getType1(), attacker.getType2(), attacker.getAbility(), itemList.None, attacker.getWeight(), grounded(attacker.getType1(), attacker.getType2(), attacker.getAbility()), status.none);
+        int[] attackerIV = {31,31,31,31,31,31}; //Max 31 [HP, Attack, Defense, Sp.Attack, Sp.Defense, Speed]
+        int[] attackerEV = {0,0,0,0,0,0}; //Max 252 (Limit: 510) [HP, Attack, Defense, Sp.Attack, Sp.Defense, Speed]
+        String attackNature = "Bashful";
 
-        hp = calcHP((int) defender.getHp(), 0, 0, level);
-        natures = natureGet("Bashful");
+        int[] statBoostsD = {0,0,0,0,0}; //Max and Min of +/- 6 [Attack, Defense, Sp.Attack, Sp.Defense, Speed]
 
-        defender = new SpeciesClass (hp, hp, statCalc((int) defender.getAtk(), 0, 0, level, natures, "Attack"), statCalc((int) defender.getDef(), 0, 0, level, natures, "Defense"), statCalc((int) defender.getSpatk(), 0, 0, level, natures, "Sp.Attack"),statCalc((int) defender.getSpdef(), 0, 0, level, natures, "Sp.Defense"), statCalc((int) defender.getSpd(), 0, 0, level, natures, "Speed"), defender.getType1(), defender.getType2(), defender.getAbility(), itemList.None, defender.getWeight(), grounded(defender.getType1(), defender.getType2(), defender.getAbility()), status.none);
+        int[] defenderIV = {31,31,31,31,31,31};;//Max 31 [HP, Attack, Defense, Sp.Attack, Sp.Defense, Speed]
+        int[] defenderEV = {0,0,0,0,0,0}; //Max 252 (Limit: 510) [HP, Attack, Defense, Sp.Attack, Sp.Defense, Speed]
+        String defendNature = "Bashful";
+
+        SpeciesClass attacker = pokemonList.get("Mewtwo");
+        SpeciesClass defender = pokemonList.get("Gengar");
+
+        int hp = calcHP((int) attacker.getHp(), attackerIV[0], attackerEV[0], level);
+        String[] natures = natureGet(attackNature);
+
+        attacker = new SpeciesClass (hp, hp, statCalc((int) attacker.getAtk(), attackerIV[1], attackerEV[1], level, natures, "Attack"), statCalc((int) attacker.getDef(), attackerIV[2], attackerEV[2], level, natures, "Defense"), statCalc((int) attacker.getSpatk(), attackerIV[3], attackerEV[3], level, natures, "Sp.Attack"),statCalc((int) attacker.getSpdef(), attackerIV[4], attackerEV[4], level, natures, "Sp.Defense"), statCalc((int) attacker.getSpd(), attackerIV[5], attackerEV[5], level, natures, "Speed"), attacker.getType1(), attacker.getType2(), attacker.getAbility(), itemList.None, attacker.getWeight(), grounded(attacker.getType1(), attacker.getType2(), attacker.getAbility()), status.none);
+
+        hp = calcHP((int) defender.getHp(), defenderIV[0], defenderEV[0], level);
+        natures = natureGet(defendNature);
+
+        defender = new SpeciesClass (hp, hp, statCalc((int) defender.getAtk(), defenderIV[1], defenderEV[1], level, natures, "Attack"), statCalc((int) defender.getDef(), defenderIV[2], defenderEV[2], level, natures, "Defense"), statCalc((int) defender.getSpatk(), defenderIV[3], defenderEV[3], level, natures, "Sp.Attack"),statCalc((int) defender.getSpdef(), defenderIV[4], defenderEV[4], level, natures, "Sp.Defense"), statCalc((int) defender.getSpd(), defenderIV[5], defenderEV[5], level, natures, "Speed"), defender.getType1(), defender.getType2(), defender.getAbility(), itemList.None, defender.getWeight(), grounded(defender.getType1(), defender.getType2(), defender.getAbility()), status.none);
 
         double attack = 0.00;
         double defense = 0.00;
+
+        attacker.setItem(itemList.Life_Orb);
 
         //Variable Checkers
         boolean multBattle = false;
@@ -53,6 +71,10 @@ public class Main extends BattleFunctions {
 
         Checks checks = new Checks(false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, 0, weatherType.none, terrainType.none);
 
+        //Stat Changes and Modifications
+        attacker = modifications(statBoostsA, attacker);
+        defender = modifications(statBoostsD, defender);
+
         if (move.getName().equals(moveList.Body_Press)) {
             attack = attacker.getDef();
             defense = defender.getDef();
@@ -69,9 +91,6 @@ public class Main extends BattleFunctions {
             attack = attacker.getSpatk();
             defense = defender.getSpdef();
         }
-
-        //Stat Changes and Modifications
-        
 
         //Calculate Damage
         totalDamage = (Math.floor(Math.floor(Math.floor(2 * level / 5 + 2) * move.getBase() * attack / defense) / 50) + 2);
@@ -110,6 +129,8 @@ public class Main extends BattleFunctions {
         totalDamageMin = totalCalc(totalDamage, targets, pb, weather, glaiveRush, critical, rndmMin, stab, type, burn, other, zMove, teraShield);
         totalDamageMax = totalCalc(totalDamage, targets, pb, weather, glaiveRush, critical, rndmMax, stab, type, burn, other, zMove, teraShield);
 
+        System.out.println(totalDamageMin + " - " + totalDamageMax);
+
         //Total Damage Calculation
 
         double percentageMin = 100.0 - (((defender.getHp() - totalDamageMin) / (double) defender.getHp()) * 100.0);
@@ -122,11 +143,13 @@ public class Main extends BattleFunctions {
         System.out.print(" - ");
         System.out.printf("%.1f%%", percentageMax);
         System.out.print(") -- ");
+        int modular = (int) Math.ceil((defender.getCurrentHp() / totalDamageMin));
         if (defender.getCurrentHp() < totalDamageMin) {
             System.out.print("guaranteed OHKO");
-        } else {
-            int modular = (int) Math.ceil((defender.getCurrentHp() / totalDamageMin));
+        } else if (modular < 10) {
             System.out.print("guaranteed " + modular + "HKO");
+        } else {
+            System.out.print("possibly the worst move ever");
         }
     }
 }

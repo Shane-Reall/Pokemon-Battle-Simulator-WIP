@@ -2,8 +2,6 @@ public class StatCalculation {
     static int calcHP (int baseHP, int IV, int EV, int level) {
         int hp = (((2*baseHP+IV+(EV/4))*level)/100) + level + 10;
 
-        System.out.println("HP =" + hp);
-
         return hp;
     }
 

@@ -96,6 +96,54 @@ public class SpeciesClass implements Serializable {
         return stated;
     }
 
+    public void setHp(double hp) {
+        this.hp = hp;
+    }
+
+    public void setCurrentHp(double currentHp) {
+        this.currentHp = currentHp;
+    }
+
+    public void setAtk(double atk) {
+        this.atk = atk;
+    }
+
+    public void setDef(double def) {
+        this.def = def;
+    }
+
+    public void setSpatk(double spatk) {
+        this.spatk = spatk;
+    }
+
+    public void setSpdef(double spdef) {
+        this.spdef = spdef;
+    }
+
+    public void setSpd(double spd) {
+        this.spd = spd;
+    }
+
+    public void setType1(pkmnType type1) {
+        this.type1 = type1;
+    }
+
+    public void setType2(pkmnType type2) {
+        this.type2 = type2;
+    }
+
+    public void setAbility(abilityList ability) {
+        this.ability = ability;
+    }
+
+    public void setWeight(double weight) {
+        this.weight = weight;
+    }
+
+    public void setItem(itemList item) {
+        this.item = item;
+    }
+
     public void setStated(status stated) {
         this.stated = stated;
     }
