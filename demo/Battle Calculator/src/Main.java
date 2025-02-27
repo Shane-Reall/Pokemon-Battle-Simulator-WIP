@@ -15,7 +15,7 @@ public class Main extends BattleFunctions {
 
         //Damage Variable
         int level = 100;
-        String currentMove = "Tackle";
+        String currentMove = "Flame_Charge";
         MoveClass move = moveList.get(currentMove);
         double totalDamage;
         double totalDamageMin;
@@ -25,31 +25,38 @@ public class Main extends BattleFunctions {
 
         int[] attackerIV = {31,31,31,31,31,31}; //Max 31 [HP, Attack, Defense, Sp.Attack, Sp.Defense, Speed]
         int[] attackerEV = {0,0,0,0,0,0}; //Max 252 (Limit: 510) [HP, Attack, Defense, Sp.Attack, Sp.Defense, Speed]
-        String attackNature = "Bashful";
+        String attackNature = "Adamant";
 
         int[] statBoostsD = {0,0,0,0,0}; //Max and Min of +/- 6 [Attack, Defense, Sp.Attack, Sp.Defense, Speed]
 
         int[] defenderIV = {31,31,31,31,31,31};;//Max 31 [HP, Attack, Defense, Sp.Attack, Sp.Defense, Speed]
         int[] defenderEV = {0,0,0,0,0,0}; //Max 252 (Limit: 510) [HP, Attack, Defense, Sp.Attack, Sp.Defense, Speed]
-        String defendNature = "Bashful";
+        String defendNature = "Docile";
 
-        SpeciesClass attacker = pokemonList.get("Mewtwo");
-        SpeciesClass defender = pokemonList.get("Sandshrew");
+        String pokemonA = "Gouging Fire";
+        String pokemonD = "Leavanny";
+        SpeciesClass attacker = pokemonList.get(pokemonA);
+        SpeciesClass defender = pokemonList.get(pokemonD);
+
+        itemList itemA = itemList.None;
+        itemList itemD = itemList.None;
+
+        System.out.println(move.isContact());
 
         int hp = calcHP((int) attacker.getHp(), attackerIV[0], attackerEV[0], level);
         String[] natures = natureGet(attackNature);
 
-        attacker = new SpeciesClass (hp, hp, statCalc((int) attacker.getAtk(), attackerIV[1], attackerEV[1], level, natures, "Attack"), statCalc((int) attacker.getDef(), attackerIV[2], attackerEV[2], level, natures, "Defense"), statCalc((int) attacker.getSpatk(), attackerIV[3], attackerEV[3], level, natures, "Sp.Attack"),statCalc((int) attacker.getSpdef(), attackerIV[4], attackerEV[4], level, natures, "Sp.Defense"), statCalc((int) attacker.getSpd(), attackerIV[5], attackerEV[5], level, natures, "Speed"), attacker.getType1(), attacker.getType2(), attacker.getAbility(), itemList.None, attacker.getWeight(), grounded(attacker.getType1(), attacker.getType2(), attacker.getAbility()), status.none);
+        attacker = new SpeciesClass (hp, hp, statCalc((int) attacker.getAtk(), attackerIV[1], attackerEV[1], level, natures, "Attack"), statCalc((int) attacker.getDef(), attackerIV[2], attackerEV[2], level, natures, "Defense"), statCalc((int) attacker.getSpatk(), attackerIV[3], attackerEV[3], level, natures, "Sp.Attack"),statCalc((int) attacker.getSpdef(), attackerIV[4], attackerEV[4], level, natures, "Sp.Defense"), statCalc((int) attacker.getSpd(), attackerIV[5], attackerEV[5], level, natures, "Speed"), attacker.getType1(), attacker.getType2(), attacker.getAbility(), itemA, attacker.getWeight(), grounded(attacker.getType1(), attacker.getType2(), attacker.getAbility()), status.none);
 
         hp = calcHP((int) defender.getHp(), defenderIV[0], defenderEV[0], level);
         natures = natureGet(defendNature);
 
-        defender = new SpeciesClass (hp, hp, statCalc((int) defender.getAtk(), defenderIV[1], defenderEV[1], level, natures, "Attack"), statCalc((int) defender.getDef(), defenderIV[2], defenderEV[2], level, natures, "Defense"), statCalc((int) defender.getSpatk(), defenderIV[3], defenderEV[3], level, natures, "Sp.Attack"),statCalc((int) defender.getSpdef(), defenderIV[4], defenderEV[4], level, natures, "Sp.Defense"), statCalc((int) defender.getSpd(), defenderIV[5], defenderEV[5], level, natures, "Speed"), defender.getType1(), defender.getType2(), defender.getAbility(), itemList.None, defender.getWeight(), grounded(defender.getType1(), defender.getType2(), defender.getAbility()), status.none);
+        defender = new SpeciesClass (hp, hp, statCalc((int) defender.getAtk(), defenderIV[1], defenderEV[1], level, natures, "Attack"), statCalc((int) defender.getDef(), defenderIV[2], defenderEV[2], level, natures, "Defense"), statCalc((int) defender.getSpatk(), defenderIV[3], defenderEV[3], level, natures, "Sp.Attack"),statCalc((int) defender.getSpdef(), defenderIV[4], defenderEV[4], level, natures, "Sp.Defense"), statCalc((int) defender.getSpd(), defenderIV[5], defenderEV[5], level, natures, "Speed"), defender.getType1(), defender.getType2(), defender.getAbility(), itemD, defender.getWeight(), grounded(defender.getType1(), defender.getType2(), defender.getAbility()), status.none);
 
         double attack = 0.00;
         double defense = 0.00;
 
-        attacker.setItem(itemList.Life_Orb);
+        defender.setAbility(abilityList.Fluffy);
 
         //Variable Checkers
         boolean multBattle = false;
@@ -132,7 +139,6 @@ public class Main extends BattleFunctions {
         totalDamageMin = totalCalc(totalDamage, targets, pb, weather, glaiveRush, critical, rndmMin, stab, type, burn, other, zMove, teraShield);
         totalDamageMax = totalCalc(totalDamage, targets, pb, weather, glaiveRush, critical, rndmMax, stab, type, burn, other, zMove, teraShield);
 
-        System.out.println(totalDamageMin + " - " + totalDamageMax);
 
         //Total Damage Calculation
 

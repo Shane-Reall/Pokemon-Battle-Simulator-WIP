@@ -1,4 +1,4 @@
-public class StatCalculation {
+public class StatCalculation extends MoveList {
     static int calcHP (int baseHP, int IV, int EV, int level) {
 
         return (((2*baseHP+IV+(EV/4))*level)/100) + level + 10;

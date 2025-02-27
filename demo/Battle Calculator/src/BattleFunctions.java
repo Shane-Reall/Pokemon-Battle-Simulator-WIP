@@ -8,6 +8,45 @@ public class BattleFunctions extends StatCalculation {
 
     private static final long serialVersionUID = 1L;
 
+    static MoveClass damageChanges(MoveClass move, String currentMove, SpeciesClass pokemon, String currentMon) {
+
+        if (currentMove.equals("Techno_Blast")) {
+            if (pokemon.getItem().equals(itemList.Douse_Drive)) {
+                move.setType(pkmnType.Water);
+            } else if (pokemon.getItem().equals(itemList.Burn_Drive)) {
+                move.setType(pkmnType.Fire);
+            } else if (pokemon.getItem().equals(itemList.Shock_Drive)) {
+                move.setType(pkmnType.Electric);
+            } else if (pokemon.getItem().equals(itemList.Chill_Drive)) {
+                move.setType(pkmnType.Ice);
+            }
+        }
+        if (move.getType() == pkmnType.Dragon && (pokemon.getItem().equals(itemList.Dragon_Fang) || pokemon.getItem().equals(itemList.Draco_Plate))) {
+            move.setBase((int) (move.getBase() * 1.2));
+        }
+        if (move.getType() == pkmnType.Steel && (pokemon.getItem().equals(itemList.Metal_Coat) || pokemon.getItem().equals(itemList.Iron_Plate))) {
+            move.setBase((int) (move.getBase() * 1.2));
+        }
+
+
+        return move;
+    }
+
+    static SpeciesClass pokemonChanges(MoveClass move, String currentMove, SpeciesClass pokemon, String currentMon) {
+
+        if (pokemon.getItem().equals(itemList.Power_Anklet)||pokemon.getItem().equals(itemList.Power_Band)||pokemon.getItem().equals(itemList.Power_Belt)||pokemon.getItem().equals(itemList.Power_Bracer)||pokemon.getItem().equals(itemList.Power_Lens)||pokemon.getItem().equals(itemList.Power_Weight)) {
+            pokemon.setSpd(pokemon.getSpd()/2);
+        }
+        if (currentMon.equals("Clamperl") && pokemon.getItem().equals(itemList.Deep_Sea_Scale)) {
+            pokemon.setSpdef(pokemon.getSpdef()*2);
+        }
+        if (currentMon.equals("Clamperl") && pokemon.getItem().equals(itemList.Deep_Sea_Tooth)) {
+            pokemon.setSpatk(pokemon.getSpatk()*2);
+        }
+
+        return pokemon;
+    }
+
     static double otherMulti(MoveClass move, SpeciesClass attacker, SpeciesClass defender, Checks checks, HashMap effectivenessChart, String currentMove) {
         double multipliers = 1;
 
@@ -82,8 +121,6 @@ public class BattleFunctions extends StatCalculation {
                 multipliers *= holder;
             }
         }
-
-        System.out.println("Mult: " + multipliers);
 
         return multipliers;
     }

@@ -31,6 +31,18 @@ public class MoveClass implements Serializable {
         return category;
     }
 
+    public void setBase(int base) {
+        this.base = base;
+    }
+
+    public void setType(pkmnType type) {
+        this.type = type;
+    }
+
+    public void setCategory(moveCtgry category) {
+        this.category = category;
+    }
+
     public boolean isContact() {
         return contact;
     }
