@@ -21,11 +21,61 @@ public class BattleFunctions extends StatCalculation {
                 move.setType(pkmnType.Ice);
             }
         }
-        if (move.getType() == pkmnType.Dragon && (pokemon.getItem().equals(itemList.Dragon_Fang) || pokemon.getItem().equals(itemList.Draco_Plate))) {
+
+        if (move.getType() == pkmnType.Fighting && (pokemon.getItem().equals(itemList.Black_Belt) || pokemon.getItem().equals(itemList.Fist_Plate))) {
             move.setBase((int) (move.getBase() * 1.2));
-        }
-        if (move.getType() == pkmnType.Steel && (pokemon.getItem().equals(itemList.Metal_Coat) || pokemon.getItem().equals(itemList.Iron_Plate))) {
+        } else if (move.getType() == pkmnType.Dark && (pokemon.getItem().equals(itemList.Dragon_Fang) || pokemon.getItem().equals(itemList.Draco_Plate))) {
             move.setBase((int) (move.getBase() * 1.2));
+        } else if (move.getType() == pkmnType.Fire && (pokemon.getItem().equals(itemList.Black_Glasses) || pokemon.getItem().equals(itemList.Dread_Plate))) {
+            move.setBase((int) (move.getBase() * 1.2));
+        } else if (move.getType() == pkmnType.Dragon && (pokemon.getItem().equals(itemList.Dragon_Fang) || pokemon.getItem().equals(itemList.Draco_Plate))) {
+            move.setBase((int) (move.getBase() * 1.2));
+        } else if (move.getType() == pkmnType.Fairy && (pokemon.getItem().equals(itemList.Fairy_Feather) || pokemon.getItem().equals(itemList.Pixie_Plate))) {
+            move.setBase((int) (move.getBase() * 1.2));
+        } else if (move.getType() == pkmnType.Rock && (pokemon.getItem().equals(itemList.Hard_Stone) || pokemon.getItem().equals(itemList.Stone_Plate) || pokemon.getItem().equals(itemList.Rock_Incense))) {
+            move.setBase((int) (move.getBase() * 1.2));
+        } else if (move.getType() == pkmnType.Electric && (pokemon.getItem().equals(itemList.Magnet) || pokemon.getItem().equals(itemList.Zap_Plate))) {
+            move.setBase((int) (move.getBase() * 1.2));
+        } else if (move.getType() == pkmnType.Steel && (pokemon.getItem().equals(itemList.Metal_Coat) || pokemon.getItem().equals(itemList.Iron_Plate))) {
+            move.setBase((int) (move.getBase() * 1.2));
+        } else if (move.getType() == pkmnType.Grass && (pokemon.getItem().equals(itemList.Miracle_Seed) || pokemon.getItem().equals(itemList.Meadow_Plate) || pokemon.getItem().equals(itemList.Rose_Incense))) {
+            move.setBase((int) (move.getBase() * 1.2));
+        } else if (move.getType() == pkmnType.Water && (pokemon.getItem().equals(itemList.Mystic_Water) || pokemon.getItem().equals(itemList.Splash_Plate) || pokemon.getItem().equals(itemList.Sea_Incense) || pokemon.getItem().equals(itemList.Wave_Incense))) {
+            move.setBase((int) (move.getBase() * 1.2));
+        } else if (move.getType() == pkmnType.Ice && (pokemon.getItem().equals(itemList.NeverMelt_Ice) || pokemon.getItem().equals(itemList.Icicle_Plate))) {
+            move.setBase((int) (move.getBase() * 1.2));
+        } else if (move.getType() == pkmnType.Poison && (pokemon.getItem().equals(itemList.Poison_Barb) || pokemon.getItem().equals(itemList.Toxic_Plate))) {
+            move.setBase((int) (move.getBase() * 1.2));
+        } else if (move.getType() == pkmnType.Flying && (pokemon.getItem().equals(itemList.Sharp_Beak) || pokemon.getItem().equals(itemList.Sky_Plate))) {
+            move.setBase((int) (move.getBase() * 1.2));
+        } else if (move.getType() == pkmnType.Normal && pokemon.getItem().equals(itemList.Silk_Scarf)) {
+            move.setBase((int) (move.getBase() * 1.2));
+        } else if (move.getType() == pkmnType.Bug && (pokemon.getItem().equals(itemList.Silver_Powder) || pokemon.getItem().equals(itemList.Insect_Plate))) {
+            move.setBase((int) (move.getBase() * 1.2));
+        } else if (move.getType() == pkmnType.Ground && (pokemon.getItem().equals(itemList.Soft_Sand) || pokemon.getItem().equals(itemList.Earth_Plate))) {
+            move.setBase((int) (move.getBase() * 1.2));
+        } else if (move.getType() == pkmnType.Ghost && (pokemon.getItem().equals(itemList.Spell_Tag) || pokemon.getItem().equals(itemList.Spooky_Plate))) {
+            move.setBase((int) (move.getBase() * 1.2));
+        } else if (move.getType() == pkmnType.Psychic && (pokemon.getItem().equals(itemList.Twisted_Spoon) || pokemon.getItem().equals(itemList.Mind_Plate) || pokemon.getItem().equals(itemList.Odd_Incense))) {
+            move.setBase((int) (move.getBase() * 1.2));
+        } else if ((currentMon.equals("Dialga") && pokemon.getItem().equals(itemList.Adamant_Orb))  || (currentMon.equals("Dialga-O") && pokemon.getItem().equals(itemList.Adamant_Crystal))  || (currentMon.equals("Giratina-A") && pokemon.getItem().equals(itemList.Griseous_Orb))  || (currentMon.equals("Giratina-O") && pokemon.getItem().equals(itemList.Griseous_Core))  || (currentMon.equals("Palkia") && pokemon.getItem().equals(itemList.Lustrous_Orb))  || (currentMon.equals("Palkia-O") && pokemon.getItem().equals(itemList.Lustrous_Globe))  || ((currentMon.equals("Latias") || currentMon.equals("Latios")) && pokemon.getItem().equals(itemList.Soul_Dew))) {
+            if (move.getType() == pkmnType.Dragon) {
+                move.setBase((int) (move.getBase() * 1.2));
+            } else if (currentMon.contains("Dialga") && move.getType() == pkmnType.Steel) {
+                move.setBase((int) (move.getBase() * 1.2));
+            } else if (currentMon.contains("Giratina") && move.getType() == pkmnType.Ghost) {
+                move.setBase((int) (move.getBase() * 1.2));
+            } else if (currentMon.contains("Palkia") && move.getType() == pkmnType.Water) {
+                move.setBase((int) (move.getBase() * 1.2));
+            } else if (currentMon.contains("Lati") && move.getType() == pkmnType.Psychic) {
+                move.setBase((int) (move.getBase() * 1.2));
+            }
+        } else if (pokemon.getItem().toString().contains("_Gem")) {
+            for (pkmnType typing : pkmnType.values()) {
+                if (move.getType().equals(typing) && pokemon.getItem().toString().contains(typing.toString())) {
+                    move.setBase((int) (move.getBase() * 1.3));
+                }
+            }
         }
 
 
@@ -34,14 +84,41 @@ public class BattleFunctions extends StatCalculation {
 
     static SpeciesClass pokemonChanges(MoveClass move, String currentMove, SpeciesClass pokemon, String currentMon) {
 
-        if (pokemon.getItem().equals(itemList.Power_Anklet)||pokemon.getItem().equals(itemList.Power_Band)||pokemon.getItem().equals(itemList.Power_Belt)||pokemon.getItem().equals(itemList.Power_Bracer)||pokemon.getItem().equals(itemList.Power_Lens)||pokemon.getItem().equals(itemList.Power_Weight)) {
+        if ((pokemon.getItem().toString().contains("Power_") && !pokemon.getItem().equals(itemList.Power_Herb)) || pokemon.getItem().equals(itemList.Macho_Brace)) {
             pokemon.setSpd(pokemon.getSpd()/2);
-        }
-        if (currentMon.equals("Clamperl") && pokemon.getItem().equals(itemList.Deep_Sea_Scale)) {
-            pokemon.setSpdef(pokemon.getSpdef()*2);
-        }
-        if (currentMon.equals("Clamperl") && pokemon.getItem().equals(itemList.Deep_Sea_Tooth)) {
-            pokemon.setSpatk(pokemon.getSpatk()*2);
+        } else if (currentMon.equals("Clamperl")) {
+            if (pokemon.getItem().equals(itemList.Deep_Sea_Scale)) {
+                pokemon.setSpdef(pokemon.getSpdef()*2);
+            } else if (pokemon.getItem().equals(itemList.Deep_Sea_Tooth)) {
+                pokemon.setSpatk(pokemon.getSpatk()*2);
+            }
+        } else if (currentMon.contains("Pikachu") && pokemon.getItem().equals(itemList.Light_Ball)) {
+            pokemon.setAtk(pokemon.getAtk() * 2);
+            pokemon.setSpatk(pokemon.getSpatk() * 2);
+        } else if (currentMon.equals("Ditto")) {
+            if (pokemon.getItem().equals(itemList.Metal_Powder)) {
+                pokemon.setDef(pokemon.getDef() * 2);
+            } else if (pokemon.getItem().equals(itemList.Quick_Powder)) {
+                pokemon.setSpd(pokemon.getSpd() * 2);
+            }
+        } else if ((currentMon.contains("Marowak") || currentMove.contains("Cubone")) && pokemon.getItem().equals(itemList.Thick_Club)) {
+            pokemon.setAtk(pokemon.getAtk() * 2);
+        } else if (pokemon.getItem().equals(itemList.Eviolite) && currentMon.equals(" ")) {
+            pokemon.setDef(pokemon.getDef() * 1.5);
+            pokemon.setSpdef(pokemon.getSpdef() * 1.5);
+        } else if (pokemon.getItem().equals(itemList.Assault_Vest)) {
+            pokemon.setSpdef(pokemon.getSpdef() * 1.5);
+        } else if (pokemon.getItem().toString().contains("Choice_")) {
+            if (pokemon.getItem().toString().contains("Band")) {
+                pokemon.setAtk(pokemon.getAtk() * 2);
+            } else if (pokemon.getItem().toString().contains("Scarf")) {
+                pokemon.setSpd(pokemon.getSpd() * 2);
+            } else if (pokemon.getItem().toString().contains("Specs")) {
+                pokemon.setSpatk(pokemon.getSpatk() * 2);
+            }
+        } else if (pokemon.getItem().equals(itemList.Iron_Ball)) {
+            pokemon.setSpd(pokemon.getSpd()/2);
+            pokemon.setGrounded(false);
         }
 
         return pokemon;

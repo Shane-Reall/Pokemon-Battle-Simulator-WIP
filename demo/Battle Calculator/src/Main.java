@@ -15,7 +15,7 @@ public class Main extends BattleFunctions {
 
         //Damage Variable
         int level = 100;
-        String currentMove = "Flame_Charge";
+        String currentMove = "Fire_Blast";
         MoveClass move = moveList.get(currentMove);
         double totalDamage;
         double totalDamageMin;
@@ -34,7 +34,7 @@ public class Main extends BattleFunctions {
         String defendNature = "Docile";
 
         String pokemonA = "Gouging Fire";
-        String pokemonD = "Leavanny";
+        String pokemonD = "Geodude";
         SpeciesClass attacker = pokemonList.get(pokemonA);
         SpeciesClass defender = pokemonList.get(pokemonD);
 
@@ -56,7 +56,7 @@ public class Main extends BattleFunctions {
         double attack = 0.00;
         double defense = 0.00;
 
-        defender.setAbility(abilityList.Fluffy);
+        damageChanges(move, currentMove, attacker, pokemonA);
 
         //Variable Checkers
         boolean multBattle = false;
@@ -67,7 +67,7 @@ public class Main extends BattleFunctions {
         //Multiplier Variable
         double targets = 1;
         double pb = 1;
-        double weather;
+        double weather = 1;
         double glaiveRush = 1;
         double critical = 1;
         double rndmMin = 0.85;
@@ -118,7 +118,9 @@ public class Main extends BattleFunctions {
             pb = 0.25;
         }
 
-        weather = weatherCheck(checks.getWeather(), move.getType());
+        if (!defender.getItem().equals(itemList.Utility_Umbrella)) {
+            weather = weatherCheck(checks.getWeather(), move.getType());
+        }
 
         if (glaiveUsed) { //Currently Thinking about moving this into other
             glaiveRush = 2;
@@ -127,6 +129,13 @@ public class Main extends BattleFunctions {
         //critical = critCalc(random, critStage);
 
         type = typeCalc(effectivenessChart, move.getType(), defender.getTypes());
+        if (defender.getItem().equals(itemList.Ring_Target) && type == 0) {
+            if (typeCalc(effectivenessChart, move.getType(), new pkmnType[]{defender.getType1(), pkmnType.Typeless}) == 0) {
+                type = typeCalc(effectivenessChart, move.getType(), new pkmnType[]{defender.getType2(), pkmnType.Typeless});
+            } else if (typeCalc(effectivenessChart, move.getType(), new pkmnType[]{defender.getType2(), pkmnType.Typeless}) == 0) {
+                type = typeCalc(effectivenessChart, move.getType(), new pkmnType[]{defender.getType1(), pkmnType.Typeless});
+            }
+        }
 
         if (attacker.getStated() == status.Burn && move.getCategory() == moveCtgry.Physical) {
             burn = 0.5;
