@@ -4,11 +4,11 @@ public class Checks {
     private boolean underwater;
     private boolean reflect;
     private boolean lightScreen;
-    private boolean auroraVeil;
     private boolean friendGuard;
     private boolean crit;
     private double continueCounter;
     private boolean doubleBattle;
+    private boolean trickRoom;
     private boolean magicRoom;
     private boolean wonderRoom;
     private boolean gravity;
@@ -22,24 +22,25 @@ public class Checks {
     private boolean battery;
     private boolean powerSpot;
     private boolean switching;
+    private boolean glaiveRush;
 
 
     private weatherType weather;
     private terrainType terrain;
 
-    public Checks (boolean minimize, boolean underground, boolean underwater, boolean reflect, boolean lightScreen, boolean auroraVeil, boolean friendGuard, boolean crit, boolean doubleBattle, boolean magicRoom, boolean wonderRoom, boolean gravity, boolean protect, boolean leechSeed, boolean foresight, boolean helpingHand, boolean tailwind, boolean flowerGift, boolean steelySpirit, boolean battery, boolean powerSpot, boolean switching, double continueCounter, weatherType weather, terrainType terrain) {
+    public Checks (boolean minimize, boolean underground, boolean underwater, boolean reflect, boolean lightScreen, boolean friendGuard, boolean crit, boolean doubleBattle, boolean trickRoom, boolean magicRoom, boolean wonderRoom, boolean gravity, boolean protect, boolean leechSeed, boolean foresight, boolean helpingHand, boolean tailwind, boolean flowerGift, boolean steelySpirit, boolean battery, boolean powerSpot, boolean switching, boolean glaiveRush, double continueCounter, weatherType weather, terrainType terrain) {
         this.minimize = minimize;
         this.underground = underground;
         this.underwater = underwater;
         this.reflect = reflect;
         this.lightScreen = lightScreen;
-        this.auroraVeil = auroraVeil;
         this.friendGuard = friendGuard;
         this.crit = crit;
         this.continueCounter = continueCounter;
         this.doubleBattle = doubleBattle;
         this.weather = weather;
         this.terrain = terrain;
+        this.trickRoom = trickRoom;
         this.magicRoom = magicRoom;
         this.wonderRoom = wonderRoom;
         this.gravity = gravity;
@@ -53,6 +54,7 @@ public class Checks {
         this.battery = battery;
         this.powerSpot = powerSpot;
         this.switching = switching;
+        this.glaiveRush = glaiveRush;
     }
 
     public boolean isMinimized() {
@@ -73,10 +75,6 @@ public class Checks {
 
     public boolean isLightScreen() {
         return lightScreen;
-    }
-
-    public boolean isAuroraVeil() {
-        return auroraVeil;
     }
 
     public boolean isFriendGuard() {
@@ -109,6 +107,10 @@ public class Checks {
 
     public boolean isWonderRoom() {
         return wonderRoom;
+    }
+
+    public boolean isTrickRoom() {
+        return trickRoom;
     }
 
     public boolean isGravity() {
@@ -153,5 +155,13 @@ public class Checks {
 
     public boolean isSwitching() {
         return switching;
+    }
+
+    public void setReflect(boolean reflect) {
+        this.reflect = reflect;
+    }
+
+    public void setLightScreen(boolean lightScreen) {
+        this.lightScreen = lightScreen;
     }
 }

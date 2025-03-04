@@ -31,7 +31,7 @@ public class MoveClass implements Serializable {
         return category;
     }
 
-    public void setBase(int base) {
+    public void setBase(double base) {
         this.base = base;
     }
 

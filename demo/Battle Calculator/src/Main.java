@@ -15,7 +15,7 @@ public class Main extends BattleFunctions {
 
         //Damage Variable
         int level = 100;
-        String currentMove = "Fire_Blast";
+        String currentMove = "Natural_Gift";
         MoveClass move = moveList.get(currentMove);
         double totalDamage;
         double totalDamageMin;
@@ -25,7 +25,7 @@ public class Main extends BattleFunctions {
 
         int[] attackerIV = {31,31,31,31,31,31}; //Max 31 [HP, Attack, Defense, Sp.Attack, Sp.Defense, Speed]
         int[] attackerEV = {0,0,0,0,0,0}; //Max 252 (Limit: 510) [HP, Attack, Defense, Sp.Attack, Sp.Defense, Speed]
-        String attackNature = "Adamant";
+        String attackNature = "Bashful";
 
         int[] statBoostsD = {0,0,0,0,0}; //Max and Min of +/- 6 [Attack, Defense, Sp.Attack, Sp.Defense, Speed]
 
@@ -33,12 +33,12 @@ public class Main extends BattleFunctions {
         int[] defenderEV = {0,0,0,0,0,0}; //Max 252 (Limit: 510) [HP, Attack, Defense, Sp.Attack, Sp.Defense, Speed]
         String defendNature = "Docile";
 
-        String pokemonA = "Gouging Fire";
-        String pokemonD = "Geodude";
+        String pokemonA = "Feraligatr";
+        String pokemonD = "Goodra";
         SpeciesClass attacker = pokemonList.get(pokemonA);
         SpeciesClass defender = pokemonList.get(pokemonD);
 
-        itemList itemA = itemList.None;
+        itemList itemA = itemList.Yache_Berry;
         itemList itemD = itemList.None;
 
         System.out.println(move.isContact());
@@ -56,13 +56,8 @@ public class Main extends BattleFunctions {
         double attack = 0.00;
         double defense = 0.00;
 
-        damageChanges(move, currentMove, attacker, pokemonA);
-
         //Variable Checkers
-        boolean multBattle = false;
-        boolean pbSecond = false;
-        boolean glaiveUsed = false;
-        int critStage = 0; //Ranges from 0 to 4 (If > 4 it will be the same as if it was four)
+        //int critStage = 0; //Ranges from 0 to 4 (If > 4 it will be the same as if it was four)
 
         //Multiplier Variable
         double targets = 1;
@@ -79,11 +74,21 @@ public class Main extends BattleFunctions {
         double zMove = 1;
         double teraShield = 1;
 
-        Checks checks = new Checks(false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, 0, weatherType.none, terrainType.none);
+        Checks checks = new Checks( false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, 0, weatherType.none, terrainType.none);
 
         //Stat Changes and Modifications
         attacker = modifications(statBoostsA, attacker);
-        defender = modifications(statBoostsD, defender);
+        if (!currentMove.equals("Chip_Away") || !currentMove.equals("Darkest_Lariat") || !attacker.getAbility().equals("Unaware")) {
+            defender = modifications(statBoostsD, defender);
+        }
+        move = damageChanges(move, currentMove, attacker, pokemonA, defender, checks);
+        attacker = pokemonChanges(move, currentMove, attacker, pokemonA);
+        defender = pokemonChanges(move, currentMove, defender, pokemonD);
+
+        if (currentMove.equals("Brick_Break") && (checks.isReflect() || checks.isLightScreen())) {
+            checks.setReflect(false);
+            checks.setLightScreen(false);
+        }
 
         if (currentMove.equals("Body_Press")) {
             attack = attacker.getDef();
@@ -114,16 +119,8 @@ public class Main extends BattleFunctions {
             targets = 0.75;
         }
 
-        if (pbSecond) { //Currently Thinking about moving this into other
-            pb = 0.25;
-        }
-
         if (!defender.getItem().equals(itemList.Utility_Umbrella)) {
             weather = weatherCheck(checks.getWeather(), move.getType());
-        }
-
-        if (glaiveUsed) { //Currently Thinking about moving this into other
-            glaiveRush = 2;
         }
 
         //critical = critCalc(random, critStage);
@@ -135,6 +132,8 @@ public class Main extends BattleFunctions {
             } else if (typeCalc(effectivenessChart, move.getType(), new pkmnType[]{defender.getType2(), pkmnType.Typeless}) == 0) {
                 type = typeCalc(effectivenessChart, move.getType(), new pkmnType[]{defender.getType1(), pkmnType.Typeless});
             }
+        } else if (currentMove.equals("Flying_Press")) {
+            type = type * typeCalc(effectivenessChart, pkmnType.Flying, defender.getTypes());
         }
 
         if (attacker.getStated() == status.Burn && move.getCategory() == moveCtgry.Physical) {
@@ -147,6 +146,14 @@ public class Main extends BattleFunctions {
 
         totalDamageMin = totalCalc(totalDamage, targets, pb, weather, glaiveRush, critical, rndmMin, stab, type, burn, other, zMove, teraShield);
         totalDamageMax = totalCalc(totalDamage, targets, pb, weather, glaiveRush, critical, rndmMax, stab, type, burn, other, zMove, teraShield);
+
+        if (currentMove.equals("Bonemerang") || currentMove.equals("Double_Hit") || currentMove.equals("Double_Iron_Bash") || currentMove.equals("Double_Kick") || currentMove.equals("Dragon_Darts") || currentMove.equals("Dual_Chop") || currentMove.equals("Dual_Wingbeat") || currentMove.equals("Gear_Grind")) {
+            totalDamageMin += totalCalc(totalDamage, targets, pb, weather, glaiveRush, critical, rndmMin, stab, type, burn, other, zMove, teraShield);
+            totalDamageMax += totalCalc(totalDamage, targets, pb, weather, glaiveRush, critical, rndmMax, stab, type, burn, other, zMove, teraShield);
+        } else if (attacker.getAbility().equals(abilityList.Parental_Bond)) { //Currently Thinking about moving this into other
+            totalDamageMin = totalDamageMin + totalCalc(totalDamage, targets, 0.25, weather, glaiveRush, critical, rndmMin, stab, type, burn, other, zMove, teraShield);
+            totalDamageMax = totalDamageMax + totalCalc(totalDamage, targets, 0.25, weather, glaiveRush, critical, rndmMax, stab, type, burn, other, zMove, teraShield);
+        }
 
 
         //Total Damage Calculation
