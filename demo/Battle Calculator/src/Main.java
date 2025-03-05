@@ -4,6 +4,7 @@ import java.util.stream.IntStream;
 public class Main extends BattleFunctions {
     public static void main(String[] args) {
 
+        //new MoveFunctions();
         //saveEffectivenessChart();
 
         HashMap<pkmnType, HashMap<pkmnType, Double>> effectivenessChart;
@@ -17,7 +18,7 @@ public class Main extends BattleFunctions {
         //Damage Variable
         int level = 100;
         int hitCount = 1;
-        String currentMove = "Tackle";
+        String currentMove = "Steel_Roller";
         MoveClass move = moveList.get(currentMove);
         double totalDamage;
         double totalDamageMin;
@@ -76,7 +77,7 @@ public class Main extends BattleFunctions {
         double zMove = 1;
         double teraShield = 1;
 
-        Checks checks = new Checks( false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, 0, weatherType.none, terrainType.none);
+        Checks checks = new Checks( false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, 0, weatherType.none, terrainType.Electric);
 
         if ((currentMove.equals("Brick_Break") || currentMove.equals("Psychic_Fangs") || currentMove.equals("Raging_Bull")) && (checks.isReflect() || checks.isLightScreen())) {
             checks.setReflect(false);
