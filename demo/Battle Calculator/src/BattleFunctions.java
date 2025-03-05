@@ -29,6 +29,14 @@ public class BattleFunctions extends StatCalculation {
                     }
                 }
             }
+        } else if (currentMove.equals("Raging_Bull") && currentMon.contains("Tauros-")) {
+            if (currentMon.contains("-C")) {
+                move.setType(pkmnType.Fighting);
+            } else if (currentMon.contains("-A")) {
+                move.setType(pkmnType.Water);
+            } else if (currentMon.contains("-B")) {
+                move.setType(pkmnType.Fire);
+            }
         }
 
         if (move.getType() == pkmnType.Fighting && (pokemon.getItem().equals(itemList.Black_Belt) || pokemon.getItem().equals(itemList.Fist_Plate))) {
@@ -89,239 +97,257 @@ public class BattleFunctions extends StatCalculation {
         }
 
         //Move Effects
-        if (currentMove.equals("Acrobatics") && pokemon.getItem().equals(itemList.None)) {
-            move.setBase((move.getBase() * 2));
-        } else if (currentMove.equals("Barb_Barrage") && (opponent.getStated().equals(status.Poison) || opponent.getStated().equals(status.Toxiced))) {
-            move.setBase((move.getBase() * 2));
-        } else if (currentMove.equals("Bolt_Beak") && (pokemon.getSpd() > opponent.getSpd())) {
-            move.setBase((move.getBase() * 2));
-        } else if (currentMove.equals("Crush_Grip")) {
-            move.setBase(120 * (opponent.getCurrentHp()/opponent.getHp()));
-        } else if ((pokemon.getStated().equals(status.Paralysis) || pokemon.getStated().equals(status.Burn) || pokemon.getStated().equals(status.Poison) || pokemon.getStated().equals(status.Toxiced)) && currentMove.equals("Facade")) {
-            move.setBase((move.getBase() * 2));
-        } else if (((pokemon.getSpd() > opponent.getSpd()) ^ checks.isTrickRoom()) && currentMove.equals("Fishious_Rend")) {
-            move.setBase((move.getBase() * 2));
-        } else if (currentMove.equals("Flail")) {
-            double casting = (pokemon.getCurrentHp()/pokemon.getHp());
-            if (casting >= 0.688) {
-                move.setBase(20);
-            } else if (casting >= 0.354) {
-                move.setBase(40);
-            } else if (casting >= 0.208) {
-                move.setBase(80);
-            } else if (casting >= 0.104) {
-                move.setBase(100);
-            } else if (casting >= 0.042) {
-                move.setBase(150);
-            } else {
-                move.setBase(200);
-            }
-        } else if (currentMove.equals("Fling")) {
-            if (!pokemon.getItem().equals(itemList.None)) {
-                HashMap<itemList, Integer> listFling = loadMapFL();
-                move.setBase(listFling.get(pokemon.getItem()));
-            } else {
-                move.setBase(0);
-            }
-        } else if (currentMove.equals("Frustration") || currentMove.equals("Return")) {
-            move.setBase(102);
-        } else if (currentMove.equals("Fury_Cutter")) {
-            move.setBase(move.getBase() * Math.pow(2,checks.getContinueCounter()));
-            if (move.getBase() > 160) {
-                move.setBase(160);
-            }
-        } else if (currentMove.equals("Gyro_Ball")) {
-            move.setBase(Math.min(150, Math.round((25 * opponent.getSpd()) / pokemon.getSpd()) + 1));
-        } else if (currentMove.equals("Heat_Crash") || currentMove.equals("Heavy_Slam")) {
-            if ((pokemon.getWeight() * 0.5) < opponent.getWeight()) {
-                move.setBase(40);
-            } else if ((pokemon.getWeight() * 0.3335) < opponent.getWeight()) {
-                move.setBase(60);
-            } else if ((pokemon.getWeight() * 0.2501) < opponent.getWeight()) {
-                move.setBase(80);
-            } else if ((pokemon.getWeight() * 0.2001) < opponent.getWeight()) {
-                move.setBase(100);
-            } else {
-                move.setBase(120);
-            }
-        } else if (currentMove.equals("Ice_Ball") || currentMove.equals("Rollout")) {
-            move.setBase(move.getBase() * Math.pow(2,checks.getContinueCounter()));
-            if (move.getBase() > 480) {
-                move.setBase(30);
-            }
-        } else if (currentMove.equals("Last_Respects")) {
-            move.setBase(140);
-        } else if (currentMove.equals("Low_Kick")) {
-            if (opponent.getWeight() < 21.8) {
-                move.setBase(20);
-            } else if (opponent.getWeight() < 54.9) {
-                move.setBase(40);
-            } else if (opponent.getWeight() < 110.0) {
-                move.setBase(60);
-            } else if (opponent.getWeight() < 220.2) {
-                move.setBase(80);
-            } else if (opponent.getWeight() < 440.7) {
-                move.setBase(100);
-            } else {
-                move.setBase(120);
-            }
-        } else if (currentMove.equals("Natural_Gift")) {
-            if (pokemon.getItem().equals(itemList.Figy_Berry) || pokemon.getItem().equals(itemList.Cornn_Berry) || pokemon.getItem().equals(itemList.Tanga_Berry) || pokemon.getItem().equals(itemList.Enigma_Berry)) {
-                move.setType(pkmnType.Bug);
-                if (pokemon.getItem().equals(itemList.Figy_Berry) || pokemon.getItem().equals(itemList.Tanga_Berry)) {
+        if (move.getCategory() == moveCtgry.Physical) {
+            if (currentMove.equals("Acrobatics") && pokemon.getItem().equals(itemList.None)) {
+                move.setBase((move.getBase() * 2));
+            } else if (currentMove.equals("Barb_Barrage") && (opponent.getStated().equals(status.Poison) || opponent.getStated().equals(status.Toxiced))) {
+                move.setBase((move.getBase() * 2));
+            } else if (currentMove.equals("Bolt_Beak") && (pokemon.getSpd() > opponent.getSpd())) {
+                move.setBase((move.getBase() * 2));
+            } else if (currentMove.equals("Crush_Grip")) {
+                move.setBase(120 * (opponent.getCurrentHp()/opponent.getHp()));
+            } else if ((pokemon.getStated().equals(status.Paralysis) || pokemon.getStated().equals(status.Burn) || pokemon.getStated().equals(status.Poison) || pokemon.getStated().equals(status.Toxiced)) && currentMove.equals("Facade")) {
+                move.setBase((move.getBase() * 2));
+            } else if (((pokemon.getSpd() > opponent.getSpd()) ^ checks.isTrickRoom()) && currentMove.equals("Fishious_Rend")) {
+                move.setBase((move.getBase() * 2));
+            } else if (currentMove.equals("Flail") || currentMove.equals("Revenge")) {
+                double casting = (pokemon.getCurrentHp()/pokemon.getHp());
+                if (casting >= 0.688) {
+                    move.setBase(20);
+                } else if (casting >= 0.354) {
+                    move.setBase(40);
+                } else if (casting >= 0.208) {
                     move.setBase(80);
-                } else if (pokemon.getItem().equals(itemList.Cornn_Berry)) {
-                    move.setBase(90);
-                } else if (pokemon.getItem().equals(itemList.Enigma_Berry)) {
+                } else if (casting >= 0.104) {
                     move.setBase(100);
+                } else if (casting >= 0.042) {
+                    move.setBase(150);
+                } else {
+                    move.setBase(200);
                 }
-            } else if (pokemon.getItem().equals(itemList.Iapapa_Berry) || pokemon.getItem().equals(itemList.Spelon_Berry) || pokemon.getItem().equals(itemList.Colbur_Berry) || pokemon.getItem().equals(itemList.Rowap_Berry) || pokemon.getItem().equals(itemList.Maranga_Berry)) {
-                move.setType(pkmnType.Dark);
-                if (pokemon.getItem().equals(itemList.Iapapa_Berry) || pokemon.getItem().equals(itemList.Colbur_Berry)) {
+            } else if (currentMove.equals("Fling")) {
+                if (!pokemon.getItem().equals(itemList.None)) {
+                    HashMap<itemList, Integer> listFling = loadMapFL();
+                    move.setBase(listFling.get(pokemon.getItem()));
+                } else {
+                    move.setBase(0);
+                }
+            } else if (currentMove.equals("Frustration") || currentMove.equals("Return")) {
+                move.setBase(102);
+            } else if (currentMove.equals("Fury_Cutter")) {
+                move.setBase(move.getBase() * Math.pow(2,checks.getContinueCounter()));
+                if (move.getBase() > 160) {
+                    move.setBase(160);
+                }
+            } else if (currentMove.equals("Gyro_Ball")) {
+                move.setBase(Math.min(150, Math.round((25 * opponent.getSpd()) / pokemon.getSpd()) + 1));
+            } else if (currentMove.equals("Heat_Crash") || currentMove.equals("Heavy_Slam")) {
+                if ((pokemon.getWeight() * 0.5) < opponent.getWeight()) {
+                    move.setBase(40);
+                } else if ((pokemon.getWeight() * 0.3335) < opponent.getWeight()) {
+                    move.setBase(60);
+                } else if ((pokemon.getWeight() * 0.2501) < opponent.getWeight()) {
                     move.setBase(80);
-                } else if (pokemon.getItem().equals(itemList.Spelon_Berry)) {
-                    move.setBase(90);
-                } else if (pokemon.getItem().equals(itemList.Rowap_Berry) || pokemon.getItem().equals(itemList.Maranga_Berry)) {
+                } else if ((pokemon.getWeight() * 0.2001) < opponent.getWeight()) {
                     move.setBase(100);
+                } else {
+                    move.setBase(120);
                 }
-            } else if (pokemon.getItem().equals(itemList.Aguav_Berry) || pokemon.getItem().equals(itemList.Nomel_Berry) || pokemon.getItem().equals(itemList.Haban_Berry) || pokemon.getItem().equals(itemList.Jaboca_Berry)) {
-                move.setType(pkmnType.Dragon);
-                if (pokemon.getItem().equals(itemList.Aguav_Berry) || pokemon.getItem().equals(itemList.Haban_Berry)) {
+            } else if (currentMove.equals("Ice_Ball") || currentMove.equals("Rollout")) {
+                move.setBase(move.getBase() * Math.pow(2,checks.getContinueCounter()));
+                if (move.getBase() > 480) {
+                    move.setBase(30);
+                }
+            } else if (currentMove.equals("Last_Respects")) {
+                move.setBase(140);
+            } else if (currentMove.equals("Low_Kick")) {
+                if (opponent.getWeight() < 21.8) {
+                    move.setBase(20);
+                } else if (opponent.getWeight() < 54.9) {
+                    move.setBase(40);
+                } else if (opponent.getWeight() < 110.0) {
+                    move.setBase(60);
+                } else if (opponent.getWeight() < 220.2) {
                     move.setBase(80);
-                } else if (pokemon.getItem().equals(itemList.Nomel_Berry)) {
-                    move.setBase(90);
-                } else if (pokemon.getItem().equals(itemList.Jaboca_Berry)) {
+                } else if (opponent.getWeight() < 440.7) {
                     move.setBase(100);
+                } else {
+                    move.setBase(120);
                 }
-            } else if (pokemon.getItem().equals(itemList.Pecha_Berry) || pokemon.getItem().equals(itemList.Wepear_Berry) || pokemon.getItem().equals(itemList.Belue_Berry) || pokemon.getItem().equals(itemList.Wacan_Berry)) {
-                move.setType(pkmnType.Electric);
-                if (pokemon.getItem().equals(itemList.Pecha_Berry) || pokemon.getItem().equals(itemList.Wacan_Berry)) {
-                    move.setBase(80);
-                } else if (pokemon.getItem().equals(itemList.Wepear_Berry)) {
-                    move.setBase(90);
-                } else if (pokemon.getItem().equals(itemList.Belue_Berry)) {
-                    move.setBase(100);
-                }
-            } else if (pokemon.getItem().equals(itemList.Roseli_Berry) || pokemon.getItem().equals(itemList.Kee_Berry)) {
-                move.setType(pkmnType.Fairy);
-                if (pokemon.getItem().equals(itemList.Roseli_Berry)) {
-                    move.setBase(80);
-                } else if (pokemon.getItem().equals(itemList.Kee_Berry)) {
-                    move.setBase(100);
-                }
-            } else if (pokemon.getItem().equals(itemList.Leppa_Berry) || pokemon.getItem().equals(itemList.Kelpsy_Berry) || pokemon.getItem().equals(itemList.Chople_Berry) || pokemon.getItem().equals(itemList.Salac_Berry)) {
-                move.setType(pkmnType.Fighting);
-                if (pokemon.getItem().equals(itemList.Leppa_Berry) || pokemon.getItem().equals(itemList.Chople_Berry)) {
-                    move.setBase(80);
-                } else if (pokemon.getItem().equals(itemList.Kelpsy_Berry)) {
-                    move.setBase(90);
-                } else if (pokemon.getItem().equals(itemList.Salac_Berry)) {
-                    move.setBase(100);
-                }
-            } else if (pokemon.getItem().equals(itemList.Cheri_Berry) || pokemon.getItem().equals(itemList.Bluk_Berry) || pokemon.getItem().equals(itemList.Watmel_Berry) || pokemon.getItem().equals(itemList.Occa_Berry)) {
-                move.setType(pkmnType.Fire);
-                if (pokemon.getItem().equals(itemList.Cheri_Berry) || pokemon.getItem().equals(itemList.Occa_Berry)) {
-                    move.setBase(80);
-                } else if (pokemon.getItem().equals(itemList.Bluk_Berry)) {
-                    move.setBase(90);
-                } else if (pokemon.getItem().equals(itemList.Watmel_Berry)) {
-                    move.setBase(100);
-                }
-            } else if (pokemon.getItem().equals(itemList.Lum_Berry) || pokemon.getItem().equals(itemList.Grepa_Berry) || pokemon.getItem().equals(itemList.Coba_Berry) || pokemon.getItem().equals(itemList.Lansat_Berry)) {
-                move.setType(pkmnType.Flying);
-                if (pokemon.getItem().equals(itemList.Lum_Berry) || pokemon.getItem().equals(itemList.Coba_Berry)) {
-                    move.setBase(80);
-                } else if (pokemon.getItem().equals(itemList.Grepa_Berry)) {
-                    move.setBase(90);
-                } else if (pokemon.getItem().equals(itemList.Lansat_Berry)) {
-                    move.setBase(100);
-                }
-            } else if (pokemon.getItem().equals(itemList.Mago_Berry) || pokemon.getItem().equals(itemList.Rabuta_Berry) || pokemon.getItem().equals(itemList.Kasib_Berry) || pokemon.getItem().equals(itemList.Custap_Berry)) {
-                move.setType(pkmnType.Ghost);
-                if (pokemon.getItem().equals(itemList.Mago_Berry) || pokemon.getItem().equals(itemList.Kasib_Berry)) {
-                    move.setBase(80);
-                } else if (pokemon.getItem().equals(itemList.Rabuta_Berry)) {
-                    move.setBase(90);
-                } else if (pokemon.getItem().equals(itemList.Custap_Berry)) {
-                    move.setBase(100);
-                }
-            } else if (pokemon.getItem().equals(itemList.Rawst_Berry) || pokemon.getItem().equals(itemList.Pinap_Berry) || pokemon.getItem().equals(itemList.Rindo_Berry) || pokemon.getItem().equals(itemList.Liechi_Berry)) {
-                move.setType(pkmnType.Grass);
-                if (pokemon.getItem().equals(itemList.Rawst_Berry) || pokemon.getItem().equals(itemList.Rindo_Berry)) {
-                    move.setBase(80);
-                } else if (pokemon.getItem().equals(itemList.Pinap_Berry)) {
-                    move.setBase(90);
-                } else if (pokemon.getItem().equals(itemList.Liechi_Berry)) {
-                    move.setBase(100);
-                }
-            } else if (pokemon.getItem().equals(itemList.Persim_Berry) || pokemon.getItem().equals(itemList.Hondew_Berry) || pokemon.getItem().equals(itemList.Shuca_Berry) || pokemon.getItem().equals(itemList.Apicot_Berry)) {
-                move.setType(pkmnType.Ground);
-                if (pokemon.getItem().equals(itemList.Persim_Berry) || pokemon.getItem().equals(itemList.Shuca_Berry)) {
-                    move.setBase(80);
-                } else if (pokemon.getItem().equals(itemList.Hondew_Berry)) {
-                    move.setBase(90);
-                } else if (pokemon.getItem().equals(itemList.Apicot_Berry)) {
-                    move.setBase(100);
-                }
+            } else if (currentMove.equals("Natural_Gift")) {
+                if (pokemon.getItem().equals(itemList.Figy_Berry) || pokemon.getItem().equals(itemList.Cornn_Berry) || pokemon.getItem().equals(itemList.Tanga_Berry) || pokemon.getItem().equals(itemList.Enigma_Berry)) {
+                    move.setType(pkmnType.Bug);
+                    if (pokemon.getItem().equals(itemList.Figy_Berry) || pokemon.getItem().equals(itemList.Tanga_Berry)) {
+                        move.setBase(80);
+                    } else if (pokemon.getItem().equals(itemList.Cornn_Berry)) {
+                        move.setBase(90);
+                    } else if (pokemon.getItem().equals(itemList.Enigma_Berry)) {
+                        move.setBase(100);
+                    }
+                } else if (pokemon.getItem().equals(itemList.Iapapa_Berry) || pokemon.getItem().equals(itemList.Spelon_Berry) || pokemon.getItem().equals(itemList.Colbur_Berry) || pokemon.getItem().equals(itemList.Rowap_Berry) || pokemon.getItem().equals(itemList.Maranga_Berry)) {
+                    move.setType(pkmnType.Dark);
+                    if (pokemon.getItem().equals(itemList.Iapapa_Berry) || pokemon.getItem().equals(itemList.Colbur_Berry)) {
+                        move.setBase(80);
+                    } else if (pokemon.getItem().equals(itemList.Spelon_Berry)) {
+                        move.setBase(90);
+                    } else if (pokemon.getItem().equals(itemList.Rowap_Berry) || pokemon.getItem().equals(itemList.Maranga_Berry)) {
+                        move.setBase(100);
+                    }
+                } else if (pokemon.getItem().equals(itemList.Aguav_Berry) || pokemon.getItem().equals(itemList.Nomel_Berry) || pokemon.getItem().equals(itemList.Haban_Berry) || pokemon.getItem().equals(itemList.Jaboca_Berry)) {
+                    move.setType(pkmnType.Dragon);
+                    if (pokemon.getItem().equals(itemList.Aguav_Berry) || pokemon.getItem().equals(itemList.Haban_Berry)) {
+                        move.setBase(80);
+                    } else if (pokemon.getItem().equals(itemList.Nomel_Berry)) {
+                        move.setBase(90);
+                    } else if (pokemon.getItem().equals(itemList.Jaboca_Berry)) {
+                        move.setBase(100);
+                    }
+                } else if (pokemon.getItem().equals(itemList.Pecha_Berry) || pokemon.getItem().equals(itemList.Wepear_Berry) || pokemon.getItem().equals(itemList.Belue_Berry) || pokemon.getItem().equals(itemList.Wacan_Berry)) {
+                    move.setType(pkmnType.Electric);
+                    if (pokemon.getItem().equals(itemList.Pecha_Berry) || pokemon.getItem().equals(itemList.Wacan_Berry)) {
+                        move.setBase(80);
+                    } else if (pokemon.getItem().equals(itemList.Wepear_Berry)) {
+                        move.setBase(90);
+                    } else if (pokemon.getItem().equals(itemList.Belue_Berry)) {
+                        move.setBase(100);
+                    }
+                } else if (pokemon.getItem().equals(itemList.Roseli_Berry) || pokemon.getItem().equals(itemList.Kee_Berry)) {
+                    move.setType(pkmnType.Fairy);
+                    if (pokemon.getItem().equals(itemList.Roseli_Berry)) {
+                        move.setBase(80);
+                    } else if (pokemon.getItem().equals(itemList.Kee_Berry)) {
+                        move.setBase(100);
+                    }
+                } else if (pokemon.getItem().equals(itemList.Leppa_Berry) || pokemon.getItem().equals(itemList.Kelpsy_Berry) || pokemon.getItem().equals(itemList.Chople_Berry) || pokemon.getItem().equals(itemList.Salac_Berry)) {
+                    move.setType(pkmnType.Fighting);
+                    if (pokemon.getItem().equals(itemList.Leppa_Berry) || pokemon.getItem().equals(itemList.Chople_Berry)) {
+                        move.setBase(80);
+                    } else if (pokemon.getItem().equals(itemList.Kelpsy_Berry)) {
+                        move.setBase(90);
+                    } else if (pokemon.getItem().equals(itemList.Salac_Berry)) {
+                        move.setBase(100);
+                    }
+                } else if (pokemon.getItem().equals(itemList.Cheri_Berry) || pokemon.getItem().equals(itemList.Bluk_Berry) || pokemon.getItem().equals(itemList.Watmel_Berry) || pokemon.getItem().equals(itemList.Occa_Berry)) {
+                    move.setType(pkmnType.Fire);
+                    if (pokemon.getItem().equals(itemList.Cheri_Berry) || pokemon.getItem().equals(itemList.Occa_Berry)) {
+                        move.setBase(80);
+                    } else if (pokemon.getItem().equals(itemList.Bluk_Berry)) {
+                        move.setBase(90);
+                    } else if (pokemon.getItem().equals(itemList.Watmel_Berry)) {
+                        move.setBase(100);
+                    }
+                } else if (pokemon.getItem().equals(itemList.Lum_Berry) || pokemon.getItem().equals(itemList.Grepa_Berry) || pokemon.getItem().equals(itemList.Coba_Berry) || pokemon.getItem().equals(itemList.Lansat_Berry)) {
+                    move.setType(pkmnType.Flying);
+                    if (pokemon.getItem().equals(itemList.Lum_Berry) || pokemon.getItem().equals(itemList.Coba_Berry)) {
+                        move.setBase(80);
+                    } else if (pokemon.getItem().equals(itemList.Grepa_Berry)) {
+                        move.setBase(90);
+                    } else if (pokemon.getItem().equals(itemList.Lansat_Berry)) {
+                        move.setBase(100);
+                    }
+                } else if (pokemon.getItem().equals(itemList.Mago_Berry) || pokemon.getItem().equals(itemList.Rabuta_Berry) || pokemon.getItem().equals(itemList.Kasib_Berry) || pokemon.getItem().equals(itemList.Custap_Berry)) {
+                    move.setType(pkmnType.Ghost);
+                    if (pokemon.getItem().equals(itemList.Mago_Berry) || pokemon.getItem().equals(itemList.Kasib_Berry)) {
+                        move.setBase(80);
+                    } else if (pokemon.getItem().equals(itemList.Rabuta_Berry)) {
+                        move.setBase(90);
+                    } else if (pokemon.getItem().equals(itemList.Custap_Berry)) {
+                        move.setBase(100);
+                    }
+                } else if (pokemon.getItem().equals(itemList.Rawst_Berry) || pokemon.getItem().equals(itemList.Pinap_Berry) || pokemon.getItem().equals(itemList.Rindo_Berry) || pokemon.getItem().equals(itemList.Liechi_Berry)) {
+                    move.setType(pkmnType.Grass);
+                    if (pokemon.getItem().equals(itemList.Rawst_Berry) || pokemon.getItem().equals(itemList.Rindo_Berry)) {
+                        move.setBase(80);
+                    } else if (pokemon.getItem().equals(itemList.Pinap_Berry)) {
+                        move.setBase(90);
+                    } else if (pokemon.getItem().equals(itemList.Liechi_Berry)) {
+                        move.setBase(100);
+                    }
+                } else if (pokemon.getItem().equals(itemList.Persim_Berry) || pokemon.getItem().equals(itemList.Hondew_Berry) || pokemon.getItem().equals(itemList.Shuca_Berry) || pokemon.getItem().equals(itemList.Apicot_Berry)) {
+                    move.setType(pkmnType.Ground);
+                    if (pokemon.getItem().equals(itemList.Persim_Berry) || pokemon.getItem().equals(itemList.Shuca_Berry)) {
+                        move.setBase(80);
+                    } else if (pokemon.getItem().equals(itemList.Hondew_Berry)) {
+                        move.setBase(90);
+                    } else if (pokemon.getItem().equals(itemList.Apicot_Berry)) {
+                        move.setBase(100);
+                    }
 
-            } else if (pokemon.getItem().equals(itemList.Aspear_Berry) || pokemon.getItem().equals(itemList.Pomeg_Berry) || pokemon.getItem().equals(itemList.Yache_Berry) || pokemon.getItem().equals(itemList.Ganlon_Berry)) {
-                move.setType(pkmnType.Ice);
-                if (pokemon.getItem().equals(itemList.Aspear_Berry) || pokemon.getItem().equals(itemList.Yache_Berry)) {
+                } else if (pokemon.getItem().equals(itemList.Aspear_Berry) || pokemon.getItem().equals(itemList.Pomeg_Berry) || pokemon.getItem().equals(itemList.Yache_Berry) || pokemon.getItem().equals(itemList.Ganlon_Berry)) {
+                    move.setType(pkmnType.Ice);
+                    if (pokemon.getItem().equals(itemList.Aspear_Berry) || pokemon.getItem().equals(itemList.Yache_Berry)) {
+                        move.setBase(80);
+                    } else if (pokemon.getItem().equals(itemList.Pomeg_Berry)) {
+                        move.setBase(90);
+                    } else if (pokemon.getItem().equals(itemList.Ganlon_Berry)) {
+                        move.setBase(100);
+                    }
+                } else if (pokemon.getItem().equals(itemList.Chilan_Berry)) {
+                    move.setType(pkmnType.Normal);
                     move.setBase(80);
-                } else if (pokemon.getItem().equals(itemList.Pomeg_Berry)) {
-                    move.setBase(90);
-                } else if (pokemon.getItem().equals(itemList.Ganlon_Berry)) {
-                    move.setBase(100);
+                } else if (pokemon.getItem().equals(itemList.Oran_Berry) || pokemon.getItem().equals(itemList.Qualot_Berry) || pokemon.getItem().equals(itemList.Kebia_Berry) || pokemon.getItem().equals(itemList.Petaya_Berry)) {
+                    move.setType(pkmnType.Poison);
+                    if (pokemon.getItem().equals(itemList.Oran_Berry) || pokemon.getItem().equals(itemList.Kebia_Berry)) {
+                        move.setBase(80);
+                    } else if (pokemon.getItem().equals(itemList.Qualot_Berry)) {
+                        move.setBase(90);
+                    } else if (pokemon.getItem().equals(itemList.Petaya_Berry)) {
+                        move.setBase(100);
+                    }
+                } else if (pokemon.getItem().equals(itemList.Sitrus_Berry) || pokemon.getItem().equals(itemList.Tamato_Berry) || pokemon.getItem().equals(itemList.Payapa_Berry) || pokemon.getItem().equals(itemList.Starf_Berry)) {
+                    move.setType(pkmnType.Psychic);
+                    if (pokemon.getItem().equals(itemList.Payapa_Berry) || pokemon.getItem().equals(itemList.Sitrus_Berry)) {
+                        move.setBase(80);
+                    } else if (pokemon.getItem().equals(itemList.Tamato_Berry)) {
+                        move.setBase(90);
+                    } else if (pokemon.getItem().equals(itemList.Starf_Berry)) {
+                        move.setBase(100);
+                    }
+                } else if (pokemon.getItem().equals(itemList.Wiki_Berry) || pokemon.getItem().equals(itemList.Magost_Berry) || pokemon.getItem().equals(itemList.Charti_Berry) || pokemon.getItem().equals(itemList.Micle_Berry)) {
+                    move.setType(pkmnType.Rock);
+                    if (pokemon.getItem().equals(itemList.Wiki_Berry) || pokemon.getItem().equals(itemList.Charti_Berry)) {
+                        move.setBase(80);
+                    } else if (pokemon.getItem().equals(itemList.Magost_Berry)) {
+                        move.setBase(90);
+                    } else if (pokemon.getItem().equals(itemList.Micle_Berry)) {
+                        move.setBase(100);
+                    }
+                } else if (pokemon.getItem().equals(itemList.Razz_Berry) || pokemon.getItem().equals(itemList.Pamtre_Berry) || pokemon.getItem().equals(itemList.Babiri_Berry)) {
+                    move.setType(pkmnType.Steel);
+                    if (pokemon.getItem().equals(itemList.Razz_Berry) || pokemon.getItem().equals(itemList.Babiri_Berry)) {
+                        move.setBase(80);
+                    } else if (pokemon.getItem().equals(itemList.Pamtre_Berry)) {
+                        move.setBase(90);
+                    }
+                } else if (pokemon.getItem().equals(itemList.Chesto_Berry) || pokemon.getItem().equals(itemList.Nanab_Berry) || pokemon.getItem().equals(itemList.Durin_Berry) || pokemon.getItem().equals(itemList.Passho_Berry)) {
+                    move.setType(pkmnType.Water);
+                    if (pokemon.getItem().equals(itemList.Chesto_Berry) || pokemon.getItem().equals(itemList.Passho_Berry)) {
+                        move.setBase(80);
+                    } else if (pokemon.getItem().equals(itemList.Nanab_Berry)) {
+                        move.setBase(90);
+                    } else if (pokemon.getItem().equals(itemList.Durin_Berry)) {
+                        move.setBase(100);
+                    }
+                } else {
+                    move.setBase(0);
                 }
-            } else if (pokemon.getItem().equals(itemList.Chilan_Berry)) {
-                move.setType(pkmnType.Normal);
-                move.setBase(80);
-            } else if (pokemon.getItem().equals(itemList.Oran_Berry) || pokemon.getItem().equals(itemList.Qualot_Berry) || pokemon.getItem().equals(itemList.Kebia_Berry) || pokemon.getItem().equals(itemList.Petaya_Berry)) {
-                move.setType(pkmnType.Poison);
-                if (pokemon.getItem().equals(itemList.Oran_Berry) || pokemon.getItem().equals(itemList.Kebia_Berry)) {
-                    move.setBase(80);
-                } else if (pokemon.getItem().equals(itemList.Qualot_Berry)) {
-                    move.setBase(90);
-                } else if (pokemon.getItem().equals(itemList.Petaya_Berry)) {
-                    move.setBase(100);
-                }
-            } else if (pokemon.getItem().equals(itemList.Sitrus_Berry) || pokemon.getItem().equals(itemList.Tamato_Berry) || pokemon.getItem().equals(itemList.Payapa_Berry) || pokemon.getItem().equals(itemList.Starf_Berry)) {
-                move.setType(pkmnType.Psychic);
-                if (pokemon.getItem().equals(itemList.Payapa_Berry) || pokemon.getItem().equals(itemList.Sitrus_Berry)) {
-                    move.setBase(80);
-                } else if (pokemon.getItem().equals(itemList.Tamato_Berry)) {
-                    move.setBase(90);
-                } else if (pokemon.getItem().equals(itemList.Starf_Berry)) {
-                    move.setBase(100);
-                }
-            } else if (pokemon.getItem().equals(itemList.Wiki_Berry) || pokemon.getItem().equals(itemList.Magost_Berry) || pokemon.getItem().equals(itemList.Charti_Berry) || pokemon.getItem().equals(itemList.Micle_Berry)) {
-                move.setType(pkmnType.Rock);
-                if (pokemon.getItem().equals(itemList.Wiki_Berry) || pokemon.getItem().equals(itemList.Charti_Berry)) {
-                    move.setBase(80);
-                } else if (pokemon.getItem().equals(itemList.Magost_Berry)) {
-                    move.setBase(90);
-                } else if (pokemon.getItem().equals(itemList.Micle_Berry)) {
-                    move.setBase(100);
-                }
-            } else if (pokemon.getItem().equals(itemList.Razz_Berry) || pokemon.getItem().equals(itemList.Pamtre_Berry) || pokemon.getItem().equals(itemList.Babiri_Berry)) {
-                move.setType(pkmnType.Steel);
-                if (pokemon.getItem().equals(itemList.Razz_Berry) || pokemon.getItem().equals(itemList.Babiri_Berry)) {
-                    move.setBase(80);
-                } else if (pokemon.getItem().equals(itemList.Pamtre_Berry)) {
-                    move.setBase(90);
-                }
-            } else if (pokemon.getItem().equals(itemList.Chesto_Berry) || pokemon.getItem().equals(itemList.Nanab_Berry) || pokemon.getItem().equals(itemList.Durin_Berry) || pokemon.getItem().equals(itemList.Passho_Berry)) {
-                move.setType(pkmnType.Water);
-                if (pokemon.getItem().equals(itemList.Chesto_Berry) || pokemon.getItem().equals(itemList.Passho_Berry)) {
-                    move.setBase(80);
-                } else if (pokemon.getItem().equals(itemList.Nanab_Berry)) {
-                    move.setBase(90);
-                } else if (pokemon.getItem().equals(itemList.Durin_Berry)) {
-                    move.setBase(100);
-                }
-            } else {
+            } else if (opponent.getSpd() >= pokemon.getSpd() && currentMove.equals("Payback")) {
+                move.setBase(move.getBase() * 2);
+            } else if (currentMove.equals("Present")) {
+                move.setBase(40);
+            } else if (currentMove.equals("Psyblade") && checks.getTerrain() == terrainType.Electric) {
+                move.setBase(120);
+            } else if (checks.isSwitching() && currentMove.equals("Pursuit")) {
+                move.setBase(move.getBase() * 2);
+            } else if ((opponent.getStated().equals(status.Paralysis) && currentMove.equals("Smelling_Salts")) || (opponent.getStated().equals(status.Sleep) && currentMove.equals("Wake_Up_Slap"))) {
+                move.setBase(move.getBase() * 2);
+            } else if (currentMove.equals("Steel_Roller") && (checks.getTerrain() == terrainType.none)) {
                 move.setBase(0);
+            } else if (currentMove.equals("Veevee_Volley")) {
+                move.setBase(102);
             }
+        } else if (move.getCategory() == moveCtgry.Special) {
+
         }
 
 

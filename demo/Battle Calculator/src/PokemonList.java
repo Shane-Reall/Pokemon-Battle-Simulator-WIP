@@ -1220,7 +1220,6 @@ public class PokemonList extends EffectivnessChart {
         pokeList.put("Terapagos-S", new SpeciesClass(160, 160, 105, 110, 130, 110, 85, pkmnType.Normal, pkmnType.Typeless, abilityList.Teraform_Zero, itemList.None, 169.8, false, status.none));
         pokeList.put("Pecharunt", new SpeciesClass(88, 88, 88, 160, 88, 88, 88, pkmnType.Poison, pkmnType.Ghost, abilityList.Poison_Puppeteer, itemList.None, 0.7, false, status.none));
 
-
         return pokeList;
     }
 }
