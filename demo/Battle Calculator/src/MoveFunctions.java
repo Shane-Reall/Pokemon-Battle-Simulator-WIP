@@ -70,8 +70,8 @@ public class MoveFunctions implements Serializable {
 
         moveEffects.put("Gyro_Ball", (move, context) -> move.setBase(Math.min(150, Math.round((25 * context.getOpponent().getSpd()) / context.getPokemon().getSpd()) + 1)));
 
-        moveEffects.put("Heat_Crash", this::handleWeightBasedMove);
-        moveEffects.put("Heavy_Slam", this::handleWeightBasedMove);
+        moveEffects.put("Heat_Crash", this::handleWeightRatioBasedMove);
+        moveEffects.put("Heavy_Slam", this::handleWeightRatioBasedMove);
 
         moveEffects.put("Ice_Ball", this::handleRolloutMoves);
         moveEffects.put("Rollout", this::handleRolloutMoves);
@@ -276,6 +276,124 @@ public class MoveFunctions implements Serializable {
 
         moveEffects.put("Veevee_Volley", (move, context) -> move.setBase(102));
 
+        moveEffects.put("Brine", (move, context) -> {
+            if (context.getOpponent().getCurrentHp() < (context.getOpponent().getHp() / 2)) {
+                move.setBase(move.getBase() * 2);
+            }
+        });
+
+        moveEffects.put("Dragon_Energy", (move, context) -> move.setBase((150* context.getPokemon().getCurrentHp()) / (context.getPokemon().getHp())));
+
+        moveEffects.put("Echoed_Voice", (move, context) -> {
+            move.setBase(Math.min(200, (int) (move.getBase() + (40 * context.getChecks().getContinueCounter()))));
+        });
+
+        moveEffects.put("Electric_Ball", this::handleSpdBasedMove);
+
+        moveEffects.put("Eruption", (move, context) -> move.setBase((150* context.getPokemon().getCurrentHp()) / (context.getPokemon().getHp())));
+
+        moveEffects.put("Expanding_Force", (move, context) -> {
+            if (context.getChecks().getTerrain() == terrainType.Psychic && context.getPokemon().isGrounded()) {
+                move.setBase(move.getBase() * 1.5);
+            }
+        });
+
+        moveEffects.put("Grass_Knot", this::handleWeightBasedMove);
+
+        moveEffects.put("Hex", (move, context) -> {
+           if (context.getOpponent().getStated() != status.none) {
+               move.setBase(move.getBase() * 2);
+           }
+        });
+
+        moveEffects.put("Hydro_Steam", (move, context) -> {
+            if ((context.getChecks().getWeather() == weatherType.DL) || (context.getChecks().getWeather() == weatherType.sun)) {
+                move.setBase(move.getBase() * 1.5);
+            }
+        });
+
+        moveEffects.put("Infernal_Parade", (move, context) -> {
+            if (context.getOpponent().getStated() != status.none) {
+                move.setBase(move.getBase() * 2);
+            }
+        });
+
+        moveEffects.put("Pika-Papow", (move, context) -> move.setBase(102));
+
+        moveEffects.put("Rising_Voltage", (move, context) -> {
+            if (context.getChecks().getTerrain() == terrainType.Electric && context.getOpponent().isGrounded()) {
+                move.setBase(move.getBase() * 2);
+            }
+        });
+
+        moveEffects.put("Snore", (move, context) -> {
+           if (context.getPokemon().getStated() != status.Sleep) {
+               move.setBase(0);
+           }
+        });
+
+        moveEffects.put("Synchronoise", (move, context) -> {
+            for (pkmnType pTypes : context.getPokemon().getTypes()) {
+                for (pkmnType oTypes : context.getOpponent().getTypes()) {
+                    if (pTypes == oTypes) {
+                        break;
+                    }
+                }
+                move.setBase(0);
+            }
+        });
+
+        moveEffects.put("Terrain_Pulse", (move, context) -> {
+            if (context.checks.getTerrain() != terrainType.none) {
+                move.setBase(100);
+                switch (context.checks.getTerrain()) {
+                    case terrainType.Electric:
+                        move.setType(pkmnType.Electric);
+                        break;
+                    case terrainType.Grass:
+                        move.setType(pkmnType.Grass);
+                        break;
+                    case terrainType.Misty:
+                        move.setType(pkmnType.Fairy);
+                        break;
+                    case terrainType.Psychic:
+                        move.setType(pkmnType.Psychic);
+                        break;
+                    default:
+                        move.setType(pkmnType.Normal);
+                        break;
+                }
+
+            }
+        });
+
+        moveEffects.put("Venoshock", (move, context) -> {
+            if ((context.getPokemon().getStated() == status.Poison) || (context.getPokemon().getStated() == status.Toxiced)) {
+                move.setBase(move.getBase() * 2);
+            }
+        });
+
+        moveEffects.put("Water_Spout", this::handleHpBasedMove);
+
+        moveEffects.put("Weather_Ball", (move, context) -> {
+            if (context.getChecks().getWeather() != weatherType.none) {
+                if (context.getChecks().getWeather() == weatherType.sun || context.getChecks().getWeather() == weatherType.DL) {
+                    move.setBase(100);
+                    move.setType(pkmnType.Fire);
+                } else if (context.getChecks().getWeather() == weatherType.rain || context.getChecks().getWeather() == weatherType.PS) {
+                    move.setBase(100);
+                    move.setType(pkmnType.Water);
+                } else if (context.getChecks().getWeather() == weatherType.snow) {
+                    move.setBase(100);
+                    move.setType(pkmnType.Ice);
+                } else if (context.getChecks().getWeather() == weatherType.sand) {
+                    move.setBase(100);
+                    move.setType(pkmnType.Rock);
+                }
+            }
+        });
+
+        moveEffects.put("Wring_Out", (move, context) -> move.setBase((120* context.getOpponent().getCurrentHp()) / (context.getOpponent().getHp())));
 
     }
 
@@ -300,12 +418,31 @@ public class MoveFunctions implements Serializable {
         move.setBase(basePower);
     }
 
-    private void handleWeightBasedMove(MoveClass move, BattleContext context) {
+    private void handleSpdBasedMove(MoveClass move, BattleContext context) {
+        double spdRatio = (double) context.getOpponent().getSpd() / context.getPokemon().getSpd();
+        int basePower = spdRatio >= 1.0000 ? 40 :
+                spdRatio >= 0.5001 ? 60 :
+                        spdRatio >= 0.3334 ? 80 :
+                                spdRatio >= 0.2501 ? 120 : 150;
+        move.setBase(basePower);
+    }
+
+    private void handleWeightRatioBasedMove(MoveClass move, BattleContext context) {
         double weightRatio = context.getPokemon().getWeight() / context.getOpponent().getWeight();
         int basePower = weightRatio >= 2.0 ? 120 :
                 weightRatio >= 1.5 ? 100 :
                         weightRatio >= 1.0 ? 80 :
                                 weightRatio >= 0.5 ? 60 : 40;
+        move.setBase(basePower);
+    }
+
+    private void handleWeightBasedMove(MoveClass move, BattleContext context) {
+        double weightRatio = context.getPokemon().getWeight() / context.getOpponent().getWeight();
+        int basePower = context.getOpponent().getWeight() >= 440.9 ? 120 :
+                context.getOpponent().getWeight() >= 220.4 ? 100 :
+                        context.getOpponent().getWeight() >= 110.2 ? 80 :
+                                context.getOpponent().getWeight() >= 55.1 ? 60 :
+                                        context.getOpponent().getWeight() >= 21.9 ? 40 : 20;
         move.setBase(basePower);
     }
 

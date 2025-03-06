@@ -18,7 +18,7 @@ public class Main extends BattleFunctions {
         //Damage Variable
         int level = 100;
         int hitCount = 1;
-        String currentMove = "Steel_Roller";
+        String currentMove = "Tackle";
         MoveClass move = moveList.get(currentMove);
         double totalDamage;
         double totalDamageMin;
@@ -30,7 +30,7 @@ public class Main extends BattleFunctions {
         int[] attackerEV = {0,0,0,0,0,0}; //Max 252 (Limit: 510) [HP, Attack, Defense, Sp.Attack, Sp.Defense, Speed]
         String attackNature = "Bashful";
 
-        int[] statBoostsD = {6,0,0,0,0}; //Max and Min of +/- 6 [Attack, Defense, Sp.Attack, Sp.Defense, Speed]
+        int[] statBoostsD = {0,0,0,0,0}; //Max and Min of +/- 6 [Attack, Defense, Sp.Attack, Sp.Defense, Speed]
 
         int[] defenderIV = {31,31,31,31,31,31};;//Max 31 [HP, Attack, Defense, Sp.Attack, Sp.Defense, Speed]
         int[] defenderEV = {0,0,0,0,0,0}; //Max 252 (Limit: 510) [HP, Attack, Defense, Sp.Attack, Sp.Defense, Speed]
@@ -40,6 +40,9 @@ public class Main extends BattleFunctions {
         String pokemonD = "Goodra";
         SpeciesClass attacker = pokemonList.get(pokemonA);
         SpeciesClass defender = pokemonList.get(pokemonD);
+
+        attacker.setAbility(abilityList.none);
+        defender.setAbility(abilityList.none);
 
         itemList itemA = itemList.None;
         itemList itemD = itemList.None;
@@ -84,12 +87,24 @@ public class Main extends BattleFunctions {
             checks.setLightScreen(false);
         } else if (currentMove.equals("Punishment")) {
             move.setBase(60);
-            int totalBoosts = IntStream.of(statBoostsD).sum();
-            for (int i = 0; i < totalBoosts; i++) {
-                move.setBase(move.getBase() + 20);
-                if (move.getBase() >= 200) {
-                    move.setBase(200);
-                    break;
+            for (int i = 0; i < 5; i++) {
+                if (statBoostsD[i] > 0) {
+                    move.setBase(move.getBase() + (20 * statBoostsD[i]));
+                    if (move.getBase() >= 200) {
+                        move.setBase(200);
+                        break;
+                    }
+                }
+            }
+        } else if (currentMove.equals("Stored_Power")) {
+            move.setBase(20);
+            for (int i = 0; i < 5; i++) {
+                if (statBoostsA[i] > 0) {
+                    move.setBase(move.getBase() + (20 * statBoostsA[i]));
+                    if (move.getBase() >= 860) {
+                        move.setBase(200);
+                        break;
+                    }
                 }
             }
         } else if (currentMove.equals("Spectral_Thief")) {
@@ -117,12 +132,26 @@ public class Main extends BattleFunctions {
         } else if (currentMove.equals("Psyshock") || currentMove.equals("Psystrike") || currentMove.equals("Secret_Sword")) {
             attack = attacker.getSpatk();
             defense = defender.getDef();
+        } else if (currentMove.equals("Shell_Side_Arm")) {
+            if (((Math.floor(Math.floor(Math.floor(2 * level / 5 + 2) * move.getBase() * attacker.getAtk() / defender.getDef()) / 50) + 2)) >= ((Math.floor(Math.floor(Math.floor(2 * level / 5 + 2) * move.getBase() * attacker.getSpatk() / defender.getSpdef()) / 50) + 2))) {
+                attack = attacker.getAtk();
+                defense = defender.getDef();
+                System.out.println("Physical");
+            } else {
+                attack = attacker.getSpatk();
+                defense = defender.getSpdef();
+                System.out.println("Special");
+            }
         } else if (move.getCategory() == moveCtgry.Physical) {
             attack = attacker.getAtk();
             defense = defender.getDef();
         } else if (move.getCategory() == moveCtgry.Special) {
             attack = attacker.getSpatk();
             defense = defender.getSpdef();
+        }
+
+        if (currentMove.equals("Photon_Geyser")) {
+            attack = Math.max(attacker.getAtk(), attacker.getSpatk());
         }
 
         //Calculate Damage
@@ -165,7 +194,7 @@ public class Main extends BattleFunctions {
         totalDamageMin = totalCalc(totalDamage, targets, pb, weather, glaiveRush, critical, rndmMin, stab, type, burn, other, zMove, teraShield);
         totalDamageMax = totalCalc(totalDamage, targets, pb, weather, glaiveRush, critical, rndmMax, stab, type, burn, other, zMove, teraShield);
 
-        if (currentMove.equals("Bonemerang") || currentMove.equals("Double_Hit") || currentMove.equals("Double_Iron_Bash") || currentMove.equals("Double_Kick") || currentMove.equals("Dragon_Darts") || currentMove.equals("Dual_Chop") || currentMove.equals("Dual_Wingbeat") || currentMove.equals("Gear_Grind") || currentMove.equals("Twineedle")) {
+        if (currentMove.equals("Bonemerang") || currentMove.equals("Double_Hit") || currentMove.equals("Double_Iron_Bash") || currentMove.equals("Double_Kick") || currentMove.equals("Dragon_Darts") || currentMove.equals("Dual_Chop") || currentMove.equals("Dual_Wingbeat") || currentMove.equals("Gear_Grind") || currentMove.equals("Twineedle") || currentMove.equals("Tachyon_Cutter") || currentMove.equals("Twin_Beam")) {
             //for (int i = 0; i < hitCount; i++) {
             totalDamageMin += totalCalc(totalDamage, targets, pb, weather, glaiveRush, critical, rndmMin, stab, type, burn, other, zMove, teraShield);
             totalDamageMax += totalCalc(totalDamage, targets, pb, weather, glaiveRush, critical, rndmMax, stab, type, burn, other, zMove, teraShield);
@@ -176,6 +205,9 @@ public class Main extends BattleFunctions {
         } else if (currentMove.equals("Night_Shade") || currentMove.equals("Seismic_Toss")) {
             totalDamageMin = level;
             totalDamageMax = level;
+        } else if (currentMove.equals("Final_Gambit")) {
+            totalDamageMin = attacker.getCurrentHp();
+            totalDamageMax = attacker.getCurrentHp();
         }
 
 

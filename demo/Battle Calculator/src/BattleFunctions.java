@@ -30,6 +30,29 @@ public class BattleFunctions extends StatCalculation {
                     }
                 }
             }
+        } else if (currentMove.equals("Judgment") && currentMon.equals("Arceus")) {
+            if (pokemon.getItem().toString().contains("_Plate")) {
+                switch (pokemon.getItem().toString()) {
+                    case "Fist_Plate" -> move.setType(pkmnType.Fighting);
+                    case "Sky_Plate" -> move.setType(pkmnType.Flying);
+                    case "Flame_Plate" -> move.setType(pkmnType.Fire);
+                    case "Splash_Plate" -> move.setType(pkmnType.Water);
+                    case "Meadow_Plate" -> move.setType(pkmnType.Grass);
+                    case "Earth_Plate" -> move.setType(pkmnType.Ground);
+                    case "Stone_Plate" -> move.setType(pkmnType.Rock);
+                    case "Toxic_Plate" -> move.setType(pkmnType.Poison);
+                    case "Zap_Plate" -> move.setType(pkmnType.Electric);
+                    case "Mind_Plate" -> move.setType(pkmnType.Psychic);
+                    case "Icicle_Plate" -> move.setType(pkmnType.Ice);
+                    case "Draco_Plate" -> move.setType(pkmnType.Dragon);
+                    case "Dread_Plate" -> move.setType(pkmnType.Dark);
+                    case "Iron_Plate" -> move.setType(pkmnType.Steel);
+                    case "Pixie_Plate" -> move.setType(pkmnType.Fairy);
+                    case "Spooky_Plate" -> move.setType(pkmnType.Ghost);
+                    case "Insect_Plate" -> move.setType(pkmnType.Bug);
+                    default -> move.setType(pkmnType.Normal); // Default case if no plate matches
+                }
+            }
         } else if (currentMove.equals("Raging_Bull") && currentMon.contains("Tauros-")) {
             if (currentMon.contains("-C")) {
                 move.setType(pkmnType.Fighting);
@@ -38,6 +61,8 @@ public class BattleFunctions extends StatCalculation {
             } else if (currentMon.contains("-B")) {
                 move.setType(pkmnType.Fire);
             }
+        } else if (currentMove.equals("Revelation_Dance") && currentMon.contains("Oricorio")) {
+            move.setType(pokemon.getType1());
         }
 
         if (move.getType() == pkmnType.Fighting && (pokemon.getItem().equals(itemList.Black_Belt) || pokemon.getItem().equals(itemList.Fist_Plate))) {
