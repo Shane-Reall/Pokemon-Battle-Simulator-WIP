@@ -24,6 +24,11 @@ public class Checks {
     private boolean switching;
     private boolean glaiveRush;
 
+    private boolean vessel;
+    private boolean sword;
+    private boolean tablets;
+    private boolean beads;
+
 
     private weatherType weather;
     private terrainType terrain;

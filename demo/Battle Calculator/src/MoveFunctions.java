@@ -333,12 +333,17 @@ public class MoveFunctions implements Serializable {
         });
 
         moveEffects.put("Synchronoise", (move, context) -> {
+            boolean match = false;
             for (pkmnType pTypes : context.getPokemon().getTypes()) {
                 for (pkmnType oTypes : context.getOpponent().getTypes()) {
-                    if (pTypes == oTypes) {
-                        break;
+                    if (pTypes == oTypes && pTypes != pkmnType.Typeless) {
+                        System.out.println("We're Hittin' (" + pTypes + ", " + oTypes + ")");
+                        match = true;
+                        return;
                     }
                 }
+            }
+            if (!match) {
                 move.setBase(0);
             }
         });
@@ -398,7 +403,7 @@ public class MoveFunctions implements Serializable {
     }
 
     public static void processMove(String moveName, MoveClass move, SpeciesClass pokemon, SpeciesClass opponent, Checks checks, HashMap moveFunctions) {
-        BattleContext context = new BattleContext(pokemon, opponent, checks);
+        BattleContext context = new BattleContext(pokemon, opponent, checks, null, null);
         SerializableBiConsumer<MoveClass, BattleContext> moveFunction = (SerializableBiConsumer<MoveClass, BattleContext>) moveFunctions.get(moveName);
 
         if (moveFunction != null) {

@@ -126,6 +126,11 @@ public class BattleFunctions extends StatCalculation {
         HashMap<String, BiConsumer<MoveClass, BattleContext>> moveFunctions = loadMapMF();
         MoveFunctions.processMove(currentMove, move, pokemon, opponent, checks, moveFunctions);
 
+        //Ability Effect
+
+        if (checks.isBattery() && move.getCategory() == moveCtgry.Special) {
+            move.setBase(move.getBase() * 1.3);
+        }
 
         return move;
     }
