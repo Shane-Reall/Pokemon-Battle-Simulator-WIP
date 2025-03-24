@@ -47,6 +47,10 @@ public class MoveClass implements Serializable {
         return contact;
     }
 
+    public void setContact(boolean contact) {
+        this.contact = contact;
+    }
+
     public boolean isSpread() {
         return spread;
     }

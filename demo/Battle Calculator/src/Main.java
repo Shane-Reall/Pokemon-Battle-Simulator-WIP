@@ -4,20 +4,50 @@ import java.util.stream.IntStream;
 public class Main extends BattleFunctions {
     public static void main(String[] args) {
 
+        //new MoveFunctions();
         //saveEffectivenessChart();
 
         HashMap<pkmnType, HashMap<pkmnType, Double>> effectivenessChart;
         HashMap<String, SpeciesClass> pokemonList;
         HashMap<String, MoveClass> moveList;
+        Scanner input = new Scanner(System.in);
+
+        String ignorable[] = {
+                "Aroma_Veil", "Battle_Armor", "Big_Pecks", "Bulletproof",
+                "Clear_Body", "Contrary", "Damp", "Dazzling",
+                "Disguise", "Dry_Skin", "Filter", "Flash_Fire",
+                "Flower_Gift", "Flower_Veil", "Fluffy", "Friend_Guard",
+                "Fur_Coat", "Heatproof", "Heavy_Metal", "Hyper_Cutter",
+                "Immunity", "Inner_Focus", "Insomnia", "Keen_Eye",
+                "Leaf_Guard", "Levitate", "Light_Metal", "Lightningrod",
+                "Limber", "Magic_Bounce", "Magma_Armor", "Marvel_Scale",
+                "Motor_Drive", "Multiscale", "Oblivious", "Overcoat",
+                "Own_Tempo", "Queenly_Majesty", "Sand_Veil", "Sap_Sipper",
+                "Shell_Armor", "Shield_Dust", "Simple", "Snow_Cloak",
+                "Solid_Rock", "Soundproof", "Sticky_Hold", "Storm_Drain",
+                "Sturdy", "Suction_Cups", "Sweet_Veil", "Tangled_Feet",
+                "Telepathy", "Thick_Fat", "Unaware", "Vital_Spirit",
+                "Volt_Absorb", "Water_Absorb", "Water_Bubble", "Water_Veil",
+                "White_Smoke", "Wonder_Guard", "Wonder_Skin"
+        };
+
+        String exception[] = {
+                "Neutralizing Gas", " Multitype", " Zen Mode", " Stance Change",
+                " Power Construct", " Schooling", " RKS System", " Shields Down",
+                " Battle Bond", " Comatose", " Disguise", " Gulp Missile",
+                " Ice Face", " As One", "Tera Shift"
+        };
 
         effectivenessChart = loadMapEC();
         pokemonList = loadMapPL();
         moveList = loadMapML();
 
+        System.out.print("Move: ");
+
         //Damage Variable
         int level = 100;
         int hitCount = 1;
-        String currentMove = "Tackle";
+        String currentMove = input.nextLine();
         MoveClass move = moveList.get(currentMove);
         double totalDamage;
         double totalDamageMin;
@@ -29,7 +59,7 @@ public class Main extends BattleFunctions {
         int[] attackerEV = {0,0,0,0,0,0}; //Max 252 (Limit: 510) [HP, Attack, Defense, Sp.Attack, Sp.Defense, Speed]
         String attackNature = "Bashful";
 
-        int[] statBoostsD = {6,0,0,0,0}; //Max and Min of +/- 6 [Attack, Defense, Sp.Attack, Sp.Defense, Speed]
+        int[] statBoostsD = {0,0,0,0,0}; //Max and Min of +/- 6 [Attack, Defense, Sp.Attack, Sp.Defense, Speed]
 
         int[] defenderIV = {31,31,31,31,31,31};;//Max 31 [HP, Attack, Defense, Sp.Attack, Sp.Defense, Speed]
         int[] defenderEV = {0,0,0,0,0,0}; //Max 252 (Limit: 510) [HP, Attack, Defense, Sp.Attack, Sp.Defense, Speed]
@@ -39,6 +69,9 @@ public class Main extends BattleFunctions {
         String pokemonD = "Goodra";
         SpeciesClass attacker = pokemonList.get(pokemonA);
         SpeciesClass defender = pokemonList.get(pokemonD);
+
+        attacker.setAbility(abilityList.Mold_Breaker);
+        defender.setAbility(abilityList.Fur_Coat);
 
         itemList itemA = itemList.None;
         itemList itemD = itemList.None;
@@ -76,19 +109,31 @@ public class Main extends BattleFunctions {
         double zMove = 1;
         double teraShield = 1;
 
-        Checks checks = new Checks( false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, 0, weatherType.none, terrainType.none);
+        Checks checks = new Checks( false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, 0, weatherType.none, terrainType.Electric);
 
         if ((currentMove.equals("Brick_Break") || currentMove.equals("Psychic_Fangs") || currentMove.equals("Raging_Bull")) && (checks.isReflect() || checks.isLightScreen())) {
             checks.setReflect(false);
             checks.setLightScreen(false);
         } else if (currentMove.equals("Punishment")) {
             move.setBase(60);
-            int totalBoosts = IntStream.of(statBoostsD).sum();
-            for (int i = 0; i < totalBoosts; i++) {
-                move.setBase(move.getBase() + 20);
-                if (move.getBase() >= 200) {
-                    move.setBase(200);
-                    break;
+            for (int i = 0; i < 5; i++) {
+                if (statBoostsD[i] > 0) {
+                    move.setBase(move.getBase() + (20 * statBoostsD[i]));
+                    if (move.getBase() >= 200) {
+                        move.setBase(200);
+                        break;
+                    }
+                }
+            }
+        } else if (currentMove.equals("Stored_Power")) {
+            move.setBase(20);
+            for (int i = 0; i < 5; i++) {
+                if (statBoostsA[i] > 0) {
+                    move.setBase(move.getBase() + (20 * statBoostsA[i]));
+                    if (move.getBase() >= 860) {
+                        move.setBase(200);
+                        break;
+                    }
                 }
             }
         } else if (currentMove.equals("Spectral_Thief")) {
@@ -98,9 +143,45 @@ public class Main extends BattleFunctions {
             defender.setAbility(null);
         }
 
+        if (attacker.getAbility() == abilityList.Klutz) {
+            attacker.setItem(itemList.None);
+        } else if (attacker.getAbility() == abilityList.Merciless) {
+            if (defender.getStated() == status.Poison || defender.getStated() == status.Toxiced) {
+                critical = 2;
+            }
+        } else if (attacker.getAbility() == abilityList.Mold_Breaker || attacker.getAbility() == abilityList.Mycelium_Might || attacker.getAbility() == abilityList.Teravolt || attacker.getAbility() == abilityList.Turboblaze) {
+            final abilityList tempAbility = defender.getAbility();
+            if (Arrays.stream(ignorable).anyMatch(i -> i.equals(tempAbility.toString()))) {
+                defender.setAbility(abilityList.none);
+            }
+        } else if (attacker.getAbility() == abilityList.Neutralizing_Gas) {
+            final abilityList tempAbility = defender.getAbility();
+            if (!(Arrays.stream(exception).anyMatch(i -> i.equals(tempAbility.toString())))) {
+                defender.setAbility(abilityList.none);
+            }
+        } else if (attacker.getAbility() == abilityList.Unaware) {
+            statBoostsD = new int[]{0, 0, 0, 0, 0};
+        }
+
+        if (defender.getAbility() == abilityList.Klutz) {
+            defender.setItem(itemList.None);
+        } else if (defender.getAbility() == abilityList.Mold_Breaker || defender.getAbility() == abilityList.Mycelium_Might) {
+            final abilityList tempAbility = attacker.getAbility();
+            if (Arrays.stream(ignorable).anyMatch(i -> i.equals(tempAbility.toString()))) {
+                attacker.setAbility(abilityList.none);
+            }
+        } else if (defender.getAbility() == abilityList.Neutralizing_Gas) {
+            final abilityList tempAbility = attacker.getAbility();
+            if (!(Arrays.stream(exception).anyMatch(i -> i.equals(tempAbility.toString())))) {
+                attacker.setAbility(abilityList.none);
+            }
+        } else if (defender.getAbility() == abilityList.Unaware) {
+            statBoostsA = new int[]{0, 0, 0, 0, 0};
+        }
+
         //Stat Changes and Modifications
         attacker = modifications(statBoostsA, attacker);
-        if (!currentMove.equals("Chip_Away") || !currentMove.equals("Darkest_Lariat") || !attacker.getAbility().equals("Unaware")) {
+        if (!currentMove.equals("Chip_Away") && !currentMove.equals("Darkest_Lariat") && !attacker.getAbility().equals("Unaware")) {
             defender = modifications(statBoostsD, defender);
         }
         move = damageChanges(move, currentMove, attacker, pokemonA, defender, checks);
@@ -116,6 +197,16 @@ public class Main extends BattleFunctions {
         } else if (currentMove.equals("Psyshock") || currentMove.equals("Psystrike") || currentMove.equals("Secret_Sword")) {
             attack = attacker.getSpatk();
             defense = defender.getDef();
+        } else if (currentMove.equals("Shell_Side_Arm")) {
+            if (((Math.floor(Math.floor(Math.floor(2 * level / 5 + 2) * move.getBase() * attacker.getAtk() / defender.getDef()) / 50) + 2)) >= ((Math.floor(Math.floor(Math.floor(2 * level / 5 + 2) * move.getBase() * attacker.getSpatk() / defender.getSpdef()) / 50) + 2))) {
+                attack = attacker.getAtk();
+                defense = defender.getDef();
+                move.setContact(true);
+            } else {
+                attack = attacker.getSpatk();
+                defense = defender.getSpdef();
+                System.out.println("Special");
+            }
         } else if (move.getCategory() == moveCtgry.Physical) {
             attack = attacker.getAtk();
             defense = defender.getDef();
@@ -124,11 +215,21 @@ public class Main extends BattleFunctions {
             defense = defender.getSpdef();
         }
 
+        if (currentMove.equals("Photon_Geyser")) {
+            attack = Math.max(attacker.getAtk(), attacker.getSpatk());
+        }
+
         //Calculate Damage
         totalDamage = (Math.floor(Math.floor(Math.floor(2 * level / 5 + 2) * move.getBase() * attack / defense) / 50) + 2);
 
         //Individual Multiplier Checks
         if (move.getType() == attacker.getType1() || move.getType() == attacker.getType2()) {
+            if (attacker.getAbility() == abilityList.Adaptability) {
+                stab = 2;
+            } else {
+                stab = 1.5;
+            }
+        } else if ((move.getType() == pkmnType.Rock && attacker.getAbility() == abilityList.Rocky_Payload) || (move.getType() == pkmnType.Steel && (attacker.getAbility() == abilityList.Steelworker || attacker.getAbility() == abilityList.Steely_Spirit))) {
             stab = 1.5;
         }
 
@@ -149,8 +250,23 @@ public class Main extends BattleFunctions {
             } else if (typeCalc(effectivenessChart, move.getType(), new pkmnType[]{defender.getType2(), pkmnType.Typeless}) == 0) {
                 type = typeCalc(effectivenessChart, move.getType(), new pkmnType[]{defender.getType1(), pkmnType.Typeless});
             }
-        } else if (currentMove.equals("Flying_Press")) {
+        }
+        if (currentMove.equals("Flying_Press")) {
             type = type * typeCalc(effectivenessChart, pkmnType.Flying, defender.getTypes());
+        }
+        if ((attacker.getAbility() == abilityList.Minds_Eye || attacker.getAbility() == abilityList.Scrappy) && type == 0) {
+            if (defender.getTypes()[1] == pkmnType.Ghost) {
+                type = typeCalc(effectivenessChart, move.getType(), new pkmnType[]{defender.getType1(), pkmnType.Typeless});
+            } else {
+                type = typeCalc(effectivenessChart, move.getType(), new pkmnType[]{defender.getType2(), pkmnType.Typeless});
+            }
+        } else if ((attacker.getAbility() == abilityList.Tera_Shell) && (attacker.getCurrentHp() == attacker.getHp())) {
+            type = 0.5;
+        } else if ((attacker.getAbility() == abilityList.Tinted_Lens) && (type == 0.5)) {
+            type = 1;
+        }
+        if ((defender.getAbility() == abilityList.Wonder_Guard) && (type != 2)) {
+            type = 0;
         }
 
         if (attacker.getStated() == status.Burn && move.getCategory() == moveCtgry.Physical) {
@@ -164,7 +280,7 @@ public class Main extends BattleFunctions {
         totalDamageMin = totalCalc(totalDamage, targets, pb, weather, glaiveRush, critical, rndmMin, stab, type, burn, other, zMove, teraShield);
         totalDamageMax = totalCalc(totalDamage, targets, pb, weather, glaiveRush, critical, rndmMax, stab, type, burn, other, zMove, teraShield);
 
-        if (currentMove.equals("Bonemerang") || currentMove.equals("Double_Hit") || currentMove.equals("Double_Iron_Bash") || currentMove.equals("Double_Kick") || currentMove.equals("Dragon_Darts") || currentMove.equals("Dual_Chop") || currentMove.equals("Dual_Wingbeat") || currentMove.equals("Gear_Grind") || currentMove.equals("Twineedle")) {
+        if (currentMove.equals("Bonemerang") || currentMove.equals("Double_Hit") || currentMove.equals("Double_Iron_Bash") || currentMove.equals("Double_Kick") || currentMove.equals("Dragon_Darts") || currentMove.equals("Dual_Chop") || currentMove.equals("Dual_Wingbeat") || currentMove.equals("Gear_Grind") || currentMove.equals("Twineedle") || currentMove.equals("Tachyon_Cutter") || currentMove.equals("Twin_Beam")) {
             //for (int i = 0; i < hitCount; i++) {
             totalDamageMin += totalCalc(totalDamage, targets, pb, weather, glaiveRush, critical, rndmMin, stab, type, burn, other, zMove, teraShield);
             totalDamageMax += totalCalc(totalDamage, targets, pb, weather, glaiveRush, critical, rndmMax, stab, type, burn, other, zMove, teraShield);
@@ -175,6 +291,9 @@ public class Main extends BattleFunctions {
         } else if (currentMove.equals("Night_Shade") || currentMove.equals("Seismic_Toss")) {
             totalDamageMin = level;
             totalDamageMax = level;
+        } else if (currentMove.equals("Final_Gambit")) {
+            totalDamageMin = attacker.getCurrentHp();
+            totalDamageMax = attacker.getCurrentHp();
         }
 
 
