@@ -40,21 +40,21 @@ public class AbilityFunctions implements Serializable {
     };
 
     private String recoilList[] = {
-            "Brave Bird", "Chloroblast", "Double-Edge", "Flare Blitz", "Head Charge",
-            "Head Smash", "Light of Ruin", "Self-Destruct", "Shadow End",
-            "Shadow Rush", "Struggle", "Submission", "Take Down",
-            "Volt Tackle", "Wave Crash", "Wild Charge", "Wood Hammer",
-            "Axe Kick", "High Jump Kick", "Jump Kick", "Supercell Slam"
+            "Brave_Bird", "Chloroblast", "Double-Edge", "Flare_Blitz", "Head_Charge",
+            "Head_Smash", "Light_of_Ruin", "Self-Destruct", "Shadow_End",
+            "Shadow_Rush", "Struggle", "Submission", "Take_Down",
+            "Volt_Tackle", "Wave_Crash", "Wild_Charge", "Wood_Hammer",
+            "Axe_Kick", "High_Jump_Kick", "Jump_Kick", "Supercell_Slam"
     };
 
     private String sliceList[] = {
-            "Aerial Ace", "Air Cutter",
-            "Air Slash", "Aqua Cutter", "Behemoth Blade", "Bitter Blade",
-            "Ceaseless Edge", "Cross Poison", "Cut", "Fury Cutter",
-            "Kowtow Cleave", "Leaf Blade", "Mighty Cleave", "Night Slash",
-            "Population Bomb", "Psyblade", "Psycho Cut", "Razor Leaf",
-            "Razor Shell", "Sacred Sword", "Secret Sword", "Slash",
-            "Solar Blade", "Stone Axe", "Tachyon Cutter", "X Scissor"
+            "Aerial_Ace", "Air_Cutter",
+            "Air_Slash", "Aqua_Cutter", "Behemoth_Blade", "Bitter_Blade",
+            "Ceaseless_Edge", "Cross_Poison", "Cut", "Fury_Cutter",
+            "Kowtow_Cleave", "Leaf_Blade", "Mighty_Cleave", "Night_Slash",
+            "Population_Bomb", "Psyblade", "Psycho_Cut", "Razor_Leaf",
+            "Razor_Shell", "Sacred_Sword", "Secret_Sword", "Slash",
+            "Solar_Blade", "Stone_Axe", "Tachyon_Cutter", "X_Scissor"
     };
 
     private String sheerForceList[] = {
@@ -133,7 +133,7 @@ public class AbilityFunctions implements Serializable {
 
         abilityEffects.put(abilityList.Analytic, (_, context) -> {
             if (context.getPokemon().getAbility() == abilityList.Analytic) {
-                if ((context.getPokemon().getSpd() > context.getOpponent().getSpd()) ^ context.getChecks().isTrickRoom()) {
+                if ((context.getPokemon().getSpd() < context.getOpponent().getSpd()) ^ context.getChecks().isTrickRoom()) {
                     context.getMove().setBase(context.getMove().getBase() * 1.3);
                 }
             }
@@ -142,11 +142,11 @@ public class AbilityFunctions implements Serializable {
         abilityEffects.put(abilityList.Aura_Break, (_, context) -> {
             if (context.getOpponent().getAbility() == abilityList.Fairy_Aura || context.getPokemon().getAbility() == abilityList.Fairy_Aura) {
                 if (context.getMove().getType() == pkmnType.Fairy) {
-                    context.getMove().setBase(context.getMove().getBase() * 0.75);
+                    context.getMove().setBase((context.getMove().getBase() / (4.0/3.0)) * 0.75);
                 }
             } else if (context.getOpponent().getAbility() == abilityList.Dark_Aura || context.getPokemon().getAbility() == abilityList.Dark_Aura) {
                 if (context.getMove().getType() == pkmnType.Dark) {
-                    context.getMove().setBase(context.getMove().getBase() * 0.75);
+                    context.getMove().setBase((context.getMove().getBase() / (4.0/3.0)) * 0.75);
                 }
             }
         });
@@ -175,10 +175,11 @@ public class AbilityFunctions implements Serializable {
         });
 
         abilityEffects.put(abilityList.Chlorophyll, (_, context) -> {
-            if (context.getChecks().getWeather() == weatherType.sun || context.getChecks().getWeather() == weatherType.DL) {
+            if (sunCheck(context)) {
                 if (context.getPokemon().getAbility() == abilityList.Chlorophyll) {
                     context.getPokemon().setSpd(context.getPokemon().getSpd() * 2);
-                } else {
+                }
+                if (context.getOpponent().getAbility() == abilityList.Chlorophyll) {
                     context.getOpponent().setSpd(context.getOpponent().getSpd() * 2);
                 }
             }
@@ -192,7 +193,7 @@ public class AbilityFunctions implements Serializable {
 
         abilityEffects.put(abilityList.Dark_Aura, (_, context) -> {
             if (context.getMove().getType() == pkmnType.Dark) {
-                context.getMove().setBase(context.getMove().getBase() * (4.0/3.0));
+                context.getMove().setBase(context.getMove().getBase() * 1.33);
             }
         });
 
@@ -266,7 +267,7 @@ public class AbilityFunctions implements Serializable {
 
         abilityEffects.put(abilityList.Fairy_Aura, (_, context) -> {
             if (context.getMove().getType() == pkmnType.Fairy) {
-                context.getMove().setBase(context.getMove().getBase() * (4.0/3.0));
+                context.getMove().setBase(context.getMove().getBase() * 1.33);
             }
         });
 
@@ -305,6 +306,11 @@ public class AbilityFunctions implements Serializable {
             if (context.getPokemon().getAbility() == abilityList.Grass_Pelt) {
                 if (context.getChecks().getTerrain() == terrainType.Grass) {
                     context.getPokemon().setDef(context.getPokemon().getDef() * 1.5);
+                }
+            }
+            if (context.getOpponent().getAbility() == abilityList.Grass_Pelt) {
+                if (context.getChecks().getTerrain() == terrainType.Grass) {
+                    context.getOpponent().setDef(context.getOpponent().getDef() * 1.5);
                 }
             }
         });
@@ -360,7 +366,7 @@ public class AbilityFunctions implements Serializable {
 
         abilityEffects.put(abilityList.Iron_Fist, (_, context) -> {
             if (Arrays.stream(punchList).anyMatch(i -> i.equals(context.getCurrentMove()))) {
-                if (context.getOpponent().getAbility() == abilityList.Iron_Fist) {
+                if (context.getPokemon().getAbility() == abilityList.Iron_Fist) {
                     context.getMove().setBase(context.getMove().getBase() * 1.2);
                 }
             }
@@ -414,7 +420,7 @@ public class AbilityFunctions implements Serializable {
 
         abilityEffects.put(abilityList.Mega_Launcher, (_, context) -> {
             if (Arrays.stream(pulseList).anyMatch(i -> i.equals(context.getCurrentMove()))) {
-                if (context.getOpponent().getAbility() == abilityList.Mega_Launcher) {
+                if (context.getPokemon().getAbility() == abilityList.Mega_Launcher) {
                     context.getMove().setBase(context.getMove().getBase() * 1.5);
                 }
             }
@@ -437,13 +443,13 @@ public class AbilityFunctions implements Serializable {
 
         abilityEffects.put(abilityList.Hadron_Engine, (_, context) -> {
             if (context.getPokemon().getAbility() == abilityList.Hadron_Engine && context.getChecks().getTerrain() == terrainType.Electric) {
-                context.getPokemon().setSpatk(context.getPokemon().getSpatk() * (4.0/3.0));
+                context.getPokemon().setSpatk(Math.round(context.getPokemon().getSpatk() * (4.0/3.0)));
             }
         });
 
         abilityEffects.put(abilityList.Orichalcum_Pulse, (_, context) -> {
-            if (context.getPokemon().getAbility() == abilityList.Orichalcum_Pulse && (context.getChecks().getWeather() == weatherType.sun || context.getChecks().getWeather() == weatherType.DL)) {
-                context.getPokemon().setAtk(context.getPokemon().getAtk() * (4.0/3.0));
+            if (context.getPokemon().getAbility() == abilityList.Orichalcum_Pulse && (sunCheck(context))) {
+                context.getPokemon().setAtk(Math.round(context.getPokemon().getAtk() * (4.0/3.0)));
             }
         });
 
@@ -463,7 +469,7 @@ public class AbilityFunctions implements Serializable {
         });
 
         abilityEffects.put(abilityList.Protosynthesis, (_, context) -> {
-            if (context.getPokemon().getAbility() == abilityList.Protosynthesis && (context.getChecks().getWeather() == weatherType.sun || context.getChecks().getWeather() == weatherType.DL)) {
+            if (context.getPokemon().getAbility() == abilityList.Protosynthesis && (sunCheck(context))) {
                 double atk = context.getPokemon().getAtk();
                 double def = context.getPokemon().getDef();
                 double spatk = context.getPokemon().getSpatk();
@@ -473,17 +479,17 @@ public class AbilityFunctions implements Serializable {
                 double max = Math.max(atk, Math.max(def, Math.max(spatk, Math.max(spdef, spd))));
 
                 if (max == atk) {
-                    context.getPokemon().setAtk(context.getPokemon().getAtk() * 1.5);
+                    context.getPokemon().setAtk(Math.round(context.getPokemon().getAtk() * 1.3));
                 } else if (max == def) {
-                    context.getPokemon().setDef(context.getPokemon().getDef() * 1.5);
+                    context.getPokemon().setDef(Math.round(context.getPokemon().getDef() * 1.3));
                 } else if (max == spatk) {
-                    context.getPokemon().setSpatk(context.getPokemon().getSpatk() * 1.5);
+                    context.getPokemon().setSpatk(Math.round(context.getPokemon().getSpatk() * 1.3));
                 } else if (max == spdef) {
-                    context.getPokemon().setSpdef(context.getPokemon().getSpdef() * 1.5);
+                    context.getPokemon().setSpdef(Math.round(context.getPokemon().getSpdef() * 1.3));
                 } else if (max == spd) {
-                    context.getPokemon().setSpd(context.getPokemon().getSpd() * 1.3);
+                    context.getPokemon().setSpd(Math.round(context.getPokemon().getSpd() * 1.5));
                 }
-            } else if (context.getOpponent().getAbility() == abilityList.Protosynthesis && (context.getChecks().getWeather() == weatherType.sun || context.getChecks().getWeather() == weatherType.DL)) {
+            } else if (context.getOpponent().getAbility() == abilityList.Protosynthesis && (sunCheck(context))) {
                 double atk = context.getOpponent().getAtk();
                 double def = context.getOpponent().getDef();
                 double spatk = context.getOpponent().getSpatk();
@@ -493,15 +499,15 @@ public class AbilityFunctions implements Serializable {
                 double max = Math.max(atk, Math.max(def, Math.max(spatk, Math.max(spdef, spd))));
 
                 if (max == atk) {
-                    context.getOpponent().setAtk(context.getOpponent().getAtk() * 1.5);
+                    context.getPokemon().setAtk(Math.round(context.getPokemon().getAtk() * 1.3));
                 } else if (max == def) {
-                    context.getOpponent().setDef(context.getOpponent().getDef() * 1.5);
+                    context.getPokemon().setDef(Math.round(context.getPokemon().getDef() * 1.3));
                 } else if (max == spatk) {
-                    context.getOpponent().setSpatk(context.getOpponent().getSpatk() * 1.5);
+                    context.getPokemon().setSpatk(Math.round(context.getPokemon().getSpatk() * 1.3));
                 } else if (max == spdef) {
-                    context.getOpponent().setSpdef(context.getOpponent().getSpdef() * 1.5);
+                    context.getPokemon().setSpdef(Math.round(context.getPokemon().getSpdef() * 1.3));
                 } else if (max == spd) {
-                    context.getOpponent().setSpd(context.getOpponent().getSpd() * 1.3);
+                    context.getPokemon().setSpd(Math.round(context.getPokemon().getSpd() * 1.5));
                 }
             }
         });
@@ -517,15 +523,15 @@ public class AbilityFunctions implements Serializable {
                 double max = Math.max(atk, Math.max(def, Math.max(spatk, Math.max(spdef, spd))));
 
                 if (max == atk) {
-                    context.getPokemon().setAtk(context.getPokemon().getAtk() * 1.5);
+                    context.getPokemon().setAtk(Math.round(context.getPokemon().getAtk() * 1.3));
                 } else if (max == def) {
-                    context.getPokemon().setDef(context.getPokemon().getDef() * 1.5);
+                    context.getPokemon().setDef(Math.round(context.getPokemon().getDef() * 1.3));
                 } else if (max == spatk) {
-                    context.getPokemon().setSpatk(context.getPokemon().getSpatk() * 1.5);
+                    context.getPokemon().setSpatk(Math.round(context.getPokemon().getSpatk() * 1.3));
                 } else if (max == spdef) {
-                    context.getPokemon().setSpdef(context.getPokemon().getSpdef() * 1.5);
+                    context.getPokemon().setSpdef(Math.round(context.getPokemon().getSpdef() * 1.3));
                 } else if (max == spd) {
-                    context.getPokemon().setSpd(context.getPokemon().getSpd() * 1.3);
+                    context.getPokemon().setSpd(Math.round(context.getPokemon().getSpd() * 1.5));
                 }
             } else if (context.getOpponent().getAbility() == abilityList.Protosynthesis && context.getChecks().getTerrain() == terrainType.Electric) {
                 double atk = context.getOpponent().getAtk();
@@ -537,15 +543,15 @@ public class AbilityFunctions implements Serializable {
                 double max = Math.max(atk, Math.max(def, Math.max(spatk, Math.max(spdef, spd))));
 
                 if (max == atk) {
-                    context.getOpponent().setAtk(context.getOpponent().getAtk() * 1.5);
+                    context.getPokemon().setAtk(Math.round(context.getPokemon().getAtk() * 1.3));
                 } else if (max == def) {
-                    context.getOpponent().setDef(context.getOpponent().getDef() * 1.5);
+                    context.getPokemon().setDef(Math.round(context.getPokemon().getDef() * 1.3));
                 } else if (max == spatk) {
-                    context.getOpponent().setSpatk(context.getOpponent().getSpatk() * 1.5);
+                    context.getPokemon().setSpatk(Math.round(context.getPokemon().getSpatk() * 1.3));
                 } else if (max == spdef) {
-                    context.getOpponent().setSpdef(context.getOpponent().getSpdef() * 1.5);
+                    context.getPokemon().setSpdef(Math.round(context.getPokemon().getSpdef() * 1.3));
                 } else if (max == spd) {
-                    context.getOpponent().setSpd(context.getOpponent().getSpd() * 1.3);
+                    context.getPokemon().setSpd(Math.round(context.getPokemon().getSpd() * 1.5));
                 }
             }
         });
@@ -579,14 +585,17 @@ public class AbilityFunctions implements Serializable {
         });
 
         abilityEffects.put(abilityList.Quick_Feet, (_, context) -> {
-            if (context.getOpponent().getAbility() == abilityList.Quick_Feet && context.getPokemon().getStated() != status.none) {
+            if (context.getOpponent().getAbility() == abilityList.Quick_Feet && context.getOpponent().getStated() != status.none) {
                 context.getOpponent().setSpd(context.getOpponent().getSpd() * 1.5);
+            }
+            if (context.getPokemon().getAbility() == abilityList.Quick_Feet && context.getPokemon().getStated() != status.none) {
+                context.getPokemon().setSpd(context.getPokemon().getSpd() * 1.5);
             }
         });
 
         abilityEffects.put(abilityList.Reckless, (_, context) -> {
             if (Arrays.stream(recoilList).anyMatch(i -> i.equals(context.getCurrentMove()))) {
-                if (context.getOpponent().getAbility() == abilityList.Reckless) {
+                if (context.getPokemon().getAbility() == abilityList.Reckless) {
                     context.getMove().setBase(context.getMove().getBase() * 1.2);
                 }
             }
@@ -629,7 +638,7 @@ public class AbilityFunctions implements Serializable {
 
         abilityEffects.put(abilityList.Sharpness, (_, context) -> {
             if (Arrays.stream(sliceList).anyMatch(i -> i.equals(context.getCurrentMove()))) {
-                if (context.getOpponent().getAbility() == abilityList.Sharpness) {
+                if (context.getPokemon().getAbility() == abilityList.Sharpness) {
                     context.getMove().setBase(context.getMove().getBase() * 1.5);
                 }
             }
@@ -637,7 +646,7 @@ public class AbilityFunctions implements Serializable {
 
         abilityEffects.put(abilityList.Sheer_Force, (_, context) -> {
             if (Arrays.stream(sheerForceList).anyMatch(i -> i.equals(context.getCurrentMove()))) {
-                if (context.getOpponent().getAbility() == abilityList.Sheer_Force) {
+                if (context.getPokemon().getAbility() == abilityList.Sheer_Force) {
                     context.getMove().setBase(context.getMove().getBase() * 1.3);
                 }
             }
@@ -672,7 +681,7 @@ public class AbilityFunctions implements Serializable {
         });
 
         abilityEffects.put(abilityList.Solar_Power, (_, context) -> {
-            if (context.getChecks().getWeather() == weatherType.sun) {
+            if (sunCheck(context)) {
                 if (context.getOpponent().getAbility() == abilityList.Solar_Power) {
                     context.getOpponent().setSpatk(context.getOpponent().getSpatk() * 1.5);
                 }
@@ -708,7 +717,7 @@ public class AbilityFunctions implements Serializable {
 
         abilityEffects.put(abilityList.Strong_Jaw, (_, context) -> {
             if (Arrays.stream(biteList).anyMatch(i -> i.equals(context.getCurrentMove()))) {
-                if (context.getOpponent().getAbility() == abilityList.Strong_Jaw) {
+                if (context.getPokemon().getAbility() == abilityList.Strong_Jaw) {
                     context.getMove().setBase(context.getMove().getBase() * 1.5);
                 }
             }
@@ -743,12 +752,12 @@ public class AbilityFunctions implements Serializable {
 
         abilityEffects.put(abilityList.Swift_Swim, (_, context) -> {
             if (context.getPokemon().getAbility() == abilityList.Swift_Swim) {
-                if ((context.getChecks().getWeather() == weatherType.rain) || (context.getChecks().getWeather() == weatherType.PS)) {
+                if (rainCheck(context)) {
                     context.getPokemon().setSpd(context.getPokemon().getSpd() * 2);
                 }
             }
             if (context.getOpponent().getAbility() == abilityList.Swift_Swim) {
-                if ((context.getChecks().getWeather() == weatherType.rain) || (context.getChecks().getWeather() == weatherType.PS)) {
+                if (rainCheck(context)) {
                     context.getOpponent().setSpd(context.getOpponent().getSpd() * 2);
                 }
             }
@@ -774,7 +783,7 @@ public class AbilityFunctions implements Serializable {
 
         abilityEffects.put(abilityList.Technician, (_, context) -> {
             if (context.getPokemon().getAbility() == abilityList.Technician) {
-                if (context.getMove().getBase() < 60) {
+                if (context.getMove().getBase() <= 60) {
                     context.getMove().setBase(context.getMove().getBase() * 1.5);
                 }
             }
@@ -798,7 +807,7 @@ public class AbilityFunctions implements Serializable {
         abilityEffects.put(abilityList.Tough_Claws, (_, context) -> {
             if (context.getPokemon().getAbility() == abilityList.Tough_Claws) {
                 if ((context.getMove().isContact())) {
-                    context.getMove().setBase(context.getMove().getBase() * 1.3);
+                    context.getMove().setBase(Math.round(context.getMove().getBase() * 1.3));
                 }
             }
         });
@@ -867,12 +876,22 @@ public class AbilityFunctions implements Serializable {
         });
     }
 
+    private boolean sunCheck(BattleContext context) {
+        return context.getChecks().getWeather() == weatherType.sun || context.getChecks().getWeather() == weatherType.DL;
+    }
+
+    private boolean rainCheck(BattleContext context) {
+        return context.getChecks().getWeather() == weatherType.rain || context.getChecks().getWeather() == weatherType.PS;
+    }
+
     public static void processAbility(MoveClass move, SpeciesClass pokemon, SpeciesClass opponent, Checks checks, HashMap moveFunctions, abilityList ability, String currentMove) {
         BattleContext context = new BattleContext(pokemon, opponent, checks, move, currentMove);
         SerializableBiConsumer<abilityList, BattleContext> moveFunction = (SerializableBiConsumer<abilityList, BattleContext>) moveFunctions.get(ability);
 
         if (moveFunction != null) {
             moveFunction.accept(ability, context);
+        } else {
+            System.out.println("Ability (" + ability + ") Not Found!");
         }
     }
 }

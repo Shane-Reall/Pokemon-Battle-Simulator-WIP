@@ -65,6 +65,18 @@ public class BattleFunctions extends StatCalculation {
             move.setType(pokemon.getType1());
         }
 
+        if (checks.getTerrain() != terrainType.none) {
+            if (checks.getTerrain() == terrainType.Electric && !(pokemon.isGrounded()) && move.getType() == pkmnType.Electric) {
+                move.setBase(move.getBase() * 1.3);
+            } else if (checks.getTerrain() == terrainType.Grass && !(pokemon.isGrounded()) && move.getType() == pkmnType.Grass) {
+                move.setBase(move.getBase() * 1.3);
+            } else if (checks.getTerrain() == terrainType.Misty && !(pokemon.isGrounded()) && move.getType() == pkmnType.Dragon) {
+                move.setBase(move.getBase() * 0.5);
+            } else if (checks.getTerrain() == terrainType.Psychic && !(pokemon.isGrounded()) && move.getType() == pkmnType.Psychic) {
+                move.setBase(move.getBase() * 1.3);
+            }
+        }
+
         if (move.getType() == pkmnType.Fighting && (pokemon.getItem().equals(itemList.Black_Belt) || pokemon.getItem().equals(itemList.Fist_Plate))) {
             move.setBase((move.getBase() * 1.2));
         } else if (move.getType() == pkmnType.Dark && (pokemon.getItem().equals(itemList.Dragon_Fang) || pokemon.getItem().equals(itemList.Draco_Plate))) {
@@ -122,11 +134,17 @@ public class BattleFunctions extends StatCalculation {
             }
         }
 
+        //Ability Effect
+        HashMap<abilityList, BiConsumer<abilityList, BattleContext>> abilityFunctions = loadMapAF();
+        AbilityFunctions.processAbility(move, pokemon, opponent, checks, abilityFunctions, opponent.getAbility(), currentMove);
+        pokemon.setAbility(abilityList.none);
+        AbilityFunctions.processAbility(move, pokemon, opponent, checks, abilityFunctions, pokemon.getAbility(), currentMove);
+
+        //System.out.println(move.getBase());
+
         //Move Effects
         HashMap<String, BiConsumer<MoveClass, BattleContext>> moveFunctions = loadMapMF();
         MoveFunctions.processMove(currentMove, move, pokemon, opponent, checks, moveFunctions);
-
-        //Ability Effect
 
         if (checks.isBattery() && move.getCategory() == moveCtgry.Special) {
             move.setBase(move.getBase() * 1.3);
@@ -332,9 +350,9 @@ public class BattleFunctions extends StatCalculation {
             new File("Serialisation").mkdirs();
 
             // Create and save the chart
-            HashMap<String, MoveFunctions.SerializableBiConsumer<MoveClass, BattleContext>> chart = MoveFunctions.getHashMap();
+            HashMap<abilityList, AbilityFunctions.SerializableBiConsumer<abilityList, BattleContext>> chart = AbilityFunctions.getHashMap();
 
-            FileOutputStream fileOut = new FileOutputStream("Serialisation/moveFunction.ser");
+            FileOutputStream fileOut = new FileOutputStream("Serialisation/abilityFunction.ser");
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(chart);
             out.close();
@@ -432,6 +450,26 @@ public class BattleFunctions extends StatCalculation {
             ObjectInputStream objectInput = new ObjectInputStream(fileInput);
 
             HashMap<String, BiConsumer<MoveClass, BattleContext>> moveList = (HashMap<String, BiConsumer<MoveClass, BattleContext>>) objectInput.readObject(); // Cast to the correct type
+
+            objectInput.close();
+            fileInput.close();
+
+            //System.out.println("Deserialized HashMap: Complete");
+
+            return moveList;
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    static HashMap loadMapAF() {
+
+        try {
+            FileInputStream fileInput = new FileInputStream("Serialisation/abilityFunction.ser");
+            ObjectInputStream objectInput = new ObjectInputStream(fileInput);
+
+            HashMap<abilityList, AbilityFunctions.SerializableBiConsumer<abilityList, BattleContext>> moveList = (HashMap<abilityList, AbilityFunctions.SerializableBiConsumer<abilityList, BattleContext>>) objectInput.readObject(); // Cast to the correct type
 
             objectInput.close();
             fileInput.close();
@@ -615,7 +653,14 @@ public class BattleFunctions extends StatCalculation {
         calculation = Math.floor(calculation * stab);
         calculation = Math.floor(calculation * type);
         calculation = Math.floor(calculation * burn);
-        calculation = (calculation * other);
+
+        calculation = calculation * other;
+        if (calculation % 1 == 0.5) {
+            calculation = Math.floor(calculation);
+        } else {
+            calculation = Math.round(calculation);
+        }
+
         //calculation = Math.floor(calculation * zMove);
         //calculation = Math.floor(calculation * teraShield);
 

@@ -4,8 +4,8 @@ import java.util.stream.IntStream;
 public class Main extends BattleFunctions {
     public static void main(String[] args) {
 
-        //new MoveFunctions();
-        //saveEffectivenessChart();
+        new AbilityFunctions();
+        saveEffectivenessChart();
 
         HashMap<pkmnType, HashMap<pkmnType, Double>> effectivenessChart;
         HashMap<String, SpeciesClass> pokemonList;
@@ -70,13 +70,11 @@ public class Main extends BattleFunctions {
         SpeciesClass attacker = pokemonList.get(pokemonA);
         SpeciesClass defender = pokemonList.get(pokemonD);
 
-        attacker.setAbility(abilityList.Mold_Breaker);
-        defender.setAbility(abilityList.Fur_Coat);
+        attacker.setAbility(abilityList.Water_Bubble);
+        defender.setAbility(abilityList.Water_Bubble);
 
         itemList itemA = itemList.None;
         itemList itemD = itemList.None;
-
-        System.out.println(move.isContact());
 
         int hp = calcHP((int) attacker.getHp(), attackerIV[0], attackerEV[0], level);
         String[] natures = natureGet(attackNature);
@@ -90,6 +88,8 @@ public class Main extends BattleFunctions {
 
         double attack = 0.00;
         double defense = 0.00;
+
+        //defender.setStated(status.Burn);
 
         //Variable Checkers
         //int critStage = 0; //Ranges from 0 to 4 (If > 4 it will be the same as if it was four)
@@ -109,7 +109,7 @@ public class Main extends BattleFunctions {
         double zMove = 1;
         double teraShield = 1;
 
-        Checks checks = new Checks( false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, 0, weatherType.none, terrainType.Electric);
+        Checks checks = new Checks( false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, 0, weatherType.none, terrainType.none);
 
         if ((currentMove.equals("Brick_Break") || currentMove.equals("Psychic_Fangs") || currentMove.equals("Raging_Bull")) && (checks.isReflect() || checks.isLightScreen())) {
             checks.setReflect(false);
@@ -185,6 +185,10 @@ public class Main extends BattleFunctions {
             defender = modifications(statBoostsD, defender);
         }
         move = damageChanges(move, currentMove, attacker, pokemonA, defender, checks);
+        if (move.getBase() <= 0) {
+            printDamageRange(0, 0, 0, 0, defender);
+            System.exit(0);
+        }
         attacker = pokemonChanges(move, currentMove, attacker, pokemonA);
         defender = pokemonChanges(move, currentMove, defender, pokemonD);
 
@@ -220,7 +224,7 @@ public class Main extends BattleFunctions {
         }
 
         //Calculate Damage
-        totalDamage = (Math.floor(Math.floor(Math.floor(2 * level / 5 + 2) * move.getBase() * attack / defense) / 50) + 2);
+        totalDamage = (Math.floor(Math.floor(Math.floor(2 * level / 5 + 2) * Math.floor(move.getBase()) * Math.floor(attack) / Math.floor(defense)) / 50) + 2);
 
         //Individual Multiplier Checks
         if (move.getType() == attacker.getType1() || move.getType() == attacker.getType2()) {
@@ -269,7 +273,7 @@ public class Main extends BattleFunctions {
             type = 0;
         }
 
-        if (attacker.getStated() == status.Burn && move.getCategory() == moveCtgry.Physical) {
+        if (attacker.getStated() == status.Burn && move.getCategory() == moveCtgry.Physical && attacker.getAbility() != abilityList.Guts) {
             burn = 0.5;
         }
 
@@ -304,6 +308,10 @@ public class Main extends BattleFunctions {
         percentageMin = Math.floor(percentageMin * 10) / 10.0;
         percentageMax = Math.floor(percentageMax * 10) / 10.0;
 
+        printDamageRange(totalDamageMin, totalDamageMax, percentageMin, percentageMax, defender);
+    }
+
+    public static void printDamageRange(double totalDamageMin, double totalDamageMax, double percentageMin, double percentageMax, SpeciesClass defender) {
         System.out.print((int) totalDamageMin + "-" + (int) totalDamageMax + " (");
         System.out.printf("%.1f%%", percentageMin);
         System.out.print(" - ");
@@ -318,4 +326,5 @@ public class Main extends BattleFunctions {
             System.out.print("possibly the worst move ever");
         }
     }
+
 }
